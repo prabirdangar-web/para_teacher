@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>School Leaving Certificate Matrix - Landscape Dual Ledger</title>
+<style>
+    *, *::before, *::after {
+        box-sizing: border-box;
+    }
+    @page {
+        size: A4 landscape;
+        margin: 4mm;
+    }
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Times New Roman', Times, serif;
+        color: #0b1a30;
+        background-color: #f2f1ed;
+    }
+    
+    /* UTILITY INTERFACE - HIDDEN DURING PRINTING */
+    .action-bar {
+        background-color: #0b2240;
+        padding: 6px 12px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: #f1c40f;
+        font-family: system-ui, sans-serif;
+        font-size: 9.5pt;
+    }
+    .print-btn {
+        background-color: #d35400;
+        color: #fff;
+        border: none;
+        padding: 5px 12px;
+        font-size: 9pt;
+        font-weight: bold;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    /* SAFE AREA RATIO: 42% COUNTERFOIL | 58% BOUNDED CERTIFICATE FOR NO MARGIN CUT */
+    .wrapper {
+        display: grid;
+        grid-template-columns: 42% 58%;
+        width: 100%;
+        gap: 12px;
+        padding: 2px;
+    }
+    
+    /* LEFT MODULE: COUNTERFOIL DATA PARAMS BOX */
+    .dashboard-panel {
+        border: 2px dashed #0b2240;
+        padding: 10px;
+        background-color: #e5e3db;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+    .panel-title {
+        font-size: 9.5pt;
+        font-weight: bold;
+        text-align: center;
+        border-bottom: 2px solid #0b2240;
+        padding-bottom: 2px;
+        margin-bottom: 8px;
+        color: #0b2240;
+        text-transform: uppercase;
+    }
+    
+    .form-line-row {
+        display: flex;
+        gap: 6px;
+        margin-bottom: 5px;
+    }
+    .form-group {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+    }
+    .form-group.flex-2 { flex: 2; }
+    .form-group.flex-3 { flex: 3; }
+    
+    .form-group label {
+        font-size: 7.5pt;
+        font-weight: bold;
+        margin-bottom: 1px;
+        color: #1a3a5f;
+    }
+    .form-group input, .form-group select {
+        padding: 2px 4px;
+        font-size: 8.5pt;
+        border: 1px solid #99aab8;
+        border-radius: 3px;
+        background-color: #fff;
+        color: #0b2240;
+        height: 23px;
+    }
+    
+    .rec-sig-box {
+        margin-top: 10px;
+        padding: 5px;
+        text-align: center;
+    }
+    .sig-dotted-line {
+        border-top: 1px dotted #0b2240;
+        width: 85%;
+        margin: 0 auto 4px auto;
+    }
+    .sig-caption {
+        font-size: 8.5pt;
+        font-weight: bold;
+        color: #1a3a5f;
+    }
+
+    /* RIGHT MODULE: HIGH-LEGIBILITY CERTIFICATE WITH BOUNDED MARGIN RULES */
+    .main-certificate {
+        border: 4px double #0b2240;
+        padding: 12px 18px;
+        background-color: #ffffff;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        max-width: 530px; /* Constrains boundaries strictly to clear right margin rollers */
+        overflow: hidden;
+    }
+    
+    /* ENLARGED RELOCATED DIB TRACK - NO UNDERLINE, PLACED HIGHER UP */
+    .memo-header {
+        display: grid;
+        grid-template-columns: 10% 55% 35%;
+        font-family: 'Times New Roman', Times, serif;
+        font-size: 13.5pt; /* More Prominent Size */
+        font-weight: bold;
+        color: #0b2240;
+        padding: 4px 0;
+        margin-top: 2px;
+        margin-bottom: 2px;
+    }
+    
+    /* DOUBLE DOTTED DECORATIVE BORDER BLOCK */
+    .double-dotted-separator {
+        border-top: 3px dotted #0b2240;
+        border-bottom: 1px dotted #0b2240;
+        height: 6px;
+        width: 100%;
+        margin: 6px 0;
+    }
+    
+    .cert-header {
+        display: flex;
+        justify-content: space-between;
+        font-size: 9.5pt;
+        font-weight: bold;
+        color: #0b2240;
+        border-bottom: 1px solid #0b2240;
+        padding-bottom: 3px;
+    }
+    
+    .school-info {
+        text-align: center;
+        margin-top: 6px;
+        color: #0b2240;
+        padding: 2px;
+    }
+    .school-title {
+        font-size: 16pt;
+        font-weight: bold;
+        text-transform: uppercase;
+        margin: 0;
+        letter-spacing: 0.5px;
+    }
+    .school-subtitle {
+        font-size: 13pt;
+        font-style: italic;
+        font-weight: bold;
+        margin: 4px 0 0 0;
+    }
+    
+    .cert-title {
+        font-size: 12.5pt;
+        text-decoration: underline;
+        font-weight: bold;
+        text-align: center;
+        margin: 10px 0 5px 0;
+        color: #0b2240;
+    }
+
+    /* SLIGHTLY SMALLER, REFINED TYPOGRAPHY FOR PRIMARY CONTENT */
+    .text-block-ten-lines {
+        font-size: 11.5pt;
+        font-style: italic; /* Styled italic face option */
+        line-height: 1.65;
+        text-align: justify;
+        color: #111;
+        margin-bottom: 8px;
+    }
+    
+    .fill-blank {
+        font-family: 'lucida bright', Times, serif;
+        font-weight: bold;
+        font-style: normal;
+        border-bottom: 1px solid #0b2240;
+        padding: 0 2px;
+        color: #0b2240;
+    }
+    
+    .marks-summary-section {
+        margin-top: 4px;
+        font-size: 11pt;
+    }
+    .marks-row {
+        margin-bottom: 3px;
+    }
+    
+    .admission-box {
+        margin-top: 6px;
+        border-top: 1px dashed #0b2240;
+        padding-top: 6px;
+    }
+    .admission-title {
+        font-size: 9.5pt;
+        text-decoration: underline;
+        font-weight: bold;
+        margin-bottom: 5px;
+        color: #0b2240;
+    }
+    
+    /* REWORKED TABLE BORDERS AND HEADERS: BLACK ON WHITE, CORE SIMPLE BOX RECTANGLE */
+    .matrix-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 12pt;
+        border: 1px solid #000000;
+    }
+    .matrix-table th {
+        background-color: #ffffff;
+        color: #000000;
+        text-align: left;
+        font-weight: bold;
+        padding: 5px;
+        border: 1px solid #000000;
+    }
+    .matrix-table td {
+        padding: 5px;
+        border: 1px solid #000000;
+        color: #222;
+    }
+
+    .cert-footer {
+        margin-top: 10px;
+        display: grid;
+        grid-template-columns: 50% 50%;
+        align-items: flex-end;
+        font-size: 9.5pt;
+        color: #0b2240;
+    }
+    .seal-block {
+        display: flex;
+        gap: 20px;
+        align-items: center;
+    }
+    .seal-area {
+        width: 60px;
+        height: 60px;
+        border: 1px dashed #0b2240;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 7.5pt;
+    }
+    .signature-area {
+        text-align: center;
+    }
+    .sig-line {
+        border-top: 1px dashed #0b2240;
+        width: 130px;
+        margin: 0 auto 3px auto;
+    }
+    
+    @media print {
+        .action-bar {
+            display: none !important;
+        }
+        body {
+            background-color: #f2f1ed !important;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+        .wrapper {
+            grid-template-columns: 42% 58% !important;
+        }
+    }
+</style>
+</head>
+<body>
+
+<div class="action-bar">
+    <div><strong>School Matrix System:</strong> Document Ledger (Reorganized Matrix Layout)</div>
+    <button class="print-btn" onclick="printAndIncrement()">Print Document</button>
+</div>
+
+<div class="wrapper">
+    <div class="dashboard-panel">
+        <div>
+            <div class="panel-title">School Counterfoil / Foil Logs</div>
+            
+            <div class="form-line-row">
+                <div class="form-group flex-2">
+                    <label>Ref: SP DIB Vide Memo No. (Type 'NA' to hide)</label>
+                    <input type="text" id="inputMemo" value="NA" oninput="updateCert()">
+                </div>
+                <div class="form-group flex-1">
+                    <label>Memo Date</label>
+                    <input type="text" id="inputMemoDate" value="NA" oninput="updateCert()">
+                </div>
+            </div>
+
+            <div class="form-line-row">
+                <div class="form-group">
+                    <label>Sl No</label>
+                    <input type="text" id="inputSlNo" value="20" oninput="updateCert()">
+                </div>
+                <div class="form-group">
+                    <label>Gender / Sex</label>
+                    <select id="inputSex" onchange="updateCert()">
+                        <option value="Male" selected>Male</option>
+                        <option value="Female">Female</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Track Mode</label>
+                    <select id="inputTrackMode" onchange="toggleTrackView(); updateCert();">
+                        <option value="Dual Track" selected>Dual Pass (MP & HS)</option>
+                        <option value="HS Only">HS Stream Only</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-line-row">
+                <div class="form-group">
+                    <label>Student Name</label>
+                    <input type="text" id="inputName" value="Sample Scholar" oninput="updateCert()">
+                </div>
+                <div class="form-group">
+                    <label>Father's Name</label>
+                    <input type="text" id="inputFather" value="Guardian Name" oninput="updateCert()">
+                </div>
+            </div>
+
+            <div class="form-line-row">
+                <div class="form-group flex-2">
+                    <label>Village Name</label>
+                    <input type="text" id="inputVillage" value="Taldangra" oninput="updateCert()">
+                </div>
+                <div class="form-group">
+                    <label>P.O.</label>
+                    <input type="text" id="inputPO" value="Taldangra" oninput="updateCert()">
+                </div>
+                <div class="form-group">
+                    <label>P.S.</label>
+                    <input type="text" id="inputPS" value="Taldangra" oninput="updateCert()">
+                </div>
+            </div>
+
+            <div class="form-line-row">
+                <div class="form-group flex-2">
+                    <label>District</label>
+                    <input type="text" id="inputDist" value="Bankura" oninput="updateCert()">
+                </div>
+                <div class="form-group">
+                    <label>PIN Code</label>
+                    <input type="text" id="inputPIN" value="722152" oninput="updateCert()">
+                </div>
+                <div class="form-group">
+                    <label>Leaving Date</label>
+                    <input type="text" id="inputLeaving" value="30-06-2026" oninput="updateCert()">
+                </div>
+            </div>
+
+            <div class="form-line-row">
+                <div class="form-group flex-1">
+                    <label>DOB (Calendar Selection)</label>
+                    <input type="date" id="inputDOB" value="1969-04-10" onchange="updateCert()">
+                </div>
+                <div class="form-group flex-2">
+                    <label>Banglar Shiksha Portal ID</label>
+                    <input type="text" id="inputBSID" value="19132104401" oninput="updateCert()">
+                </div>
+            </div>
+
+            <div class="form-line-row">
+                <div class="form-group">
+                    <label>H.S. Stream Course</label>
+                    <select id="inputStream" onchange="updateCert()">
+                        <option value="General [Science]" selected>General [Science]</option>
+                        <option value="General [Arts]">General [Arts]</option>
+                        <option value="General [Commerce]">General [Commerce]</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Enrollment Category</label>
+                    <input type="text" id="inputCategory" value="Regular" oninput="updateCert()">
+                </div>
+            </div>
+
+            <div class="form-line-row" style="background:#dad7cd; padding:2px; border-radius:3px;">
+                <div class="form-group">
+                    <label>M.P. Class</label>
+                    <select id="inputClassMP" onchange="updateCert()">
+                        <option value="V" selected>Class-V</option>
+                        <option value="VI">Class-VI</option>
+                        <option value="VII">Class-VII</option>
+                        <option value="VIII">Class-VIII</option>
+                        <option value="IX">Class-IX</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>M.P. Pass Yr</label>
+                    <input type="text" id="inputMPYear" value="1985" oninput="updateCert()">
+                </div>
+                <div class="form-group">
+                    <label>M.P. Adm Date</label>
+                    <input type="text" id="inputAdmDateMP" value="02-01-1980" oninput="updateCert()">
+                </div>
+                <div class="form-group">
+                    <label>M.P. Score</label>
+                    <input type="text" id="inputMPScore" value="560/700" oninput="updateCert()">
+                </div>
+                <div class="form-group">
+                    <label>M.P. Adm Sl</label>
+                    <input type="text" id="inputRegSlMP" value="104" oninput="updateCert()">
+                </div>
+            </div>
+
+            <div class="form-line-row" style="background:#dad7cd; padding:2px; border-radius:3px;">
+                <div class="form-group">
+                    <label>H.S. Class</label>
+                    <select id="inputClassHS" onchange="updateCert()">
+                        <option value="XI" selected>Class-XI</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>H.S. Pass Yr</label>
+                    <input type="text" id="inputHSYear" value="1987" oninput="updateCert()">
+                </div>
+                <div class="form-group">
+                    <label>H.S. Adm Date</label>
+                    <input type="text" id="inputAdmDateHS" value="15-06-1985" oninput="updateCert()">
+                </div>
+                <div class="form-group">
+                    <label>H.S. Score</label>
+                    <input type="text" id="inputHSScore" value="780/1000" oninput="updateCert()">
+                </div>
+                <div class="form-group">
+                    <label>H.S. Adm Sl</label>
+                    <input type="text" id="inputRegSlHS" value="45" oninput="updateCert()">
+                </div>
+            </div>
+        </div>
+        
+        <div class="rec-sig-box">
+            <div class="sig-dotted-line"></div>
+            <div class="sig-caption">Signature of Headmaster with Date</div>
+        </div>
+        <div class="rec-sig-box" style="margin-top: 5px;">
+            <div class="sig-dotted-line"></div>
+            <div class="sig-caption">Signature of Candidate / Guardian</div>
+        </div>
+    </div>
+    
+    <div class="main-certificate">
+        <div>
+            <div class="cert-header">
+                <div>Memo No: <span id="certSlNo" class="fill-blank">TFHS/2026/20</span></div>
+                <div>Date: <span id="certTodayDate" class="fill-blank">30-06-2026</span></div>
+                <div style="font-size: 7.5pt;">
+                    Index: U1-083 &nbsp;|&nbsp; HS Code: 114071 &nbsp;|&nbsp; VTC: 5006
+                </div>
+            </div>
+            
+            <div class="school-info">
+                <h1 class="school-title">Taldangra Fulmati High School [H.S.]</h1>
+                <p class="school-subtitle">P.O. - Taldangra, P.S. - Taldangra, Dist. - Bankura, P.I.N. - 722152</p>
+            </div>
+            
+            <div class="double-dotted-separator"></div>
+
+            <div class="memo-header" id="certSpDibRow">
+                <div>Ref:</div>
+                <div>SP DIB Vide Memo No.: <span id="certMemo"></span></div>
+                <div style="text-align: right;">Dated:- <span id="certMemoDate"></span></div>
+            </div>
+            
+            <div class="cert-title">To whom it may concern:</div>
+            
+            <div class="text-block-ten-lines">
+                This is to certify that <span id="certName" class="fill-blank"></span>; 
+                <span id="lblParentage" style="font-weight: bold; font-style: normal;">Son</span> of 
+                <span id="certFather" class="fill-blank"></span> ; 
+                an inhabitant of Village:- <span id="certVillage" class="fill-blank"></span>, 
+                P.O.- <span id="certPO" class="fill-blank"></span>, P.S.- <span id="certPS" class="fill-blank"></span>, 
+                District.- <span id="certDist" class="fill-blank"></span> ; P.I.N.- <span id="certPIN" class="fill-blank"></span> 
+                <span id="certTrackSegment">passed the Madhyamik Pariksha [S.E.] from this school in the year - <span id="certMPYearText" style="font-weight: bold; font-style: normal;"></span> as a <span id="certCatText1" style="font-style: normal;">Regular</span> candidate & </span>Higher Secondary Examination from this school in the year - <span id="certHSYearText" style="font-weight:bold; font-style: normal;"></span> as a <span id="certCatText2" style="font-style: normal;">Regular</span> candidate in <span id="certStreamTxt" style="font-weight:bold; font-style: normal;">General [Science]</span> stream course 
+                and left the school on <span id="certLeavingDateText" class="fill-blank"></span>. During <span id="lblPossessive1">his</span> stay in this school <span id="lblSubject">he</span> always impressed me by <span id="lblPossessive2">his</span> good conduct. 
+                His date of birth recorded in the admission Register is <span id="certDOB" class="fill-blank"></span>. 
+                [ <span id="certDOBWords" style="font-style: normal; font-weight: bold;"></span> ] 
+                So far as my knowledge goes <span id="lblSubject2">he</span> bears a good moral character. I wish <span id="lblObjective">him</span> all success in life.
+            </div>
+            
+            <div class="marks-summary-section">
+                <div class="marks-row" id="certRowMPMarks" style="font-weight: bold;">
+                    Marks obtained by <span class="lblObjectiveText">him</span> in the M.P. Examination: <span id="certMarksMP" class="fill-blank"></span>
+                </div>
+                <div class="marks-row" style="font-weight: bold;">
+                    Marks obtained by <span class="lblObjectiveText">him</span> in the H.S. Examination: <span id="certMarksHS" class="fill-blank"></span>
+                </div>
+            </div>
+            
+            <div class="admission-box">
+                <div class="admission-title">Institutional Admission Records:</div>
+                <table class="matrix-table">
+                    <thead>
+                        <tr>
+                            <th>Academic Track / Course</th>
+                            <th>Class Admitted</th>
+                            <th>Admission Date</th>
+                            <th>Admission Register Sl No</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr id="certRowMP">
+                            <td><strong>M.P.(S.E.)</strong></td>
+                            <td><span id="certClassMP">Class-V</span></td>
+                            <td><span id="certAdmDateMP"></span></td>
+                            <td><span id="certRegSlMP"></span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>H.S.</strong></td>
+                            <td><span id="certClassHS">Class-XI</span></td>
+                            <td><span id="certAdmDateHS"></span></td>
+                            <td><span id="certRegSlHS"></span></td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div style="font-size: 12pt; margin-top: 4px;">
+                    <strong>Banglar Shiksha Portal ID:</strong> <span id="certBSID" class="fill-blank" style="font-family:monospace; letter-spacing:0.5px;"></span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="cert-footer">
+            <div class="seal-block">
+                <div>
+                    <strong>Dated:</strong> <span id="certFooterDate"><p>Date: <span id="today"></span></p>
+
+<script>
+const today = new Date();
+const dd = String(today.getDate()).padStart(2, '0');
+const mm = String(today.getMonth() + 1).padStart(2, '0');
+const yyyy = today.getFullYear();
+
+document.getElementById("today").textContent = `${dd}-${mm}-${yyyy}`;
+</script></span><br>
+                    <strong>Place:</strong> Taldangra
+                </div>
+                <div class="seal-area">School Seal</div>
+            </div>
+            <div class="signature-area">
+                <div class="sig-line"></div>
+                <strong>Headmaster</strong>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const units = ['', 'First', 'Second', 'Third', 'Fourth', 'Fifth', 'Sixth', 'Seventh', 'Eighth', 'Ninth', 'Tenth', 'Eleventh', 'Twelfth', 'Thirteenth', 'Fourteenth', 'Fifteenth', 'Sixteenth', 'Seventeenth', 'Eighteenth', 'Nineteenth'];
+    const standardNumbers = ['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen'];
+    const tens = ['', '', 'Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety'];
+    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+    // Load saved tracking serial number or fallback safely to starting setup
+    window.addEventListener('DOMContentLoaded', (event) => {
+        let savedSl = localStorage.getItem('lastMatrixSlNo');
+        if (savedSl) {
+            document.getElementById('inputSlNo').value = savedSl;
+        } else {
+            document.getElementById('inputSlNo').value = "20";
+        }
+        updateCert();
+    });
+
+    // Automatically trigger native layout spool, bump count, and sync state engine
+    function printAndIncrement() {
+        window.print();
+        
+        let currentSlInput = document.getElementById('inputSlNo');
+        let currentSl = parseInt(currentSlInput.value);
+        
+        if (!isNaN(currentSl)) {
+            let nextSl = currentSl + 1;
+            currentSlInput.value = nextSl;
+            localStorage.setItem('lastMatrixSlNo', nextSl);
+            updateCert();
+        }
+    }
+
+    function convertDayToWords(day) {
+        let d = parseInt(day);
+        if (d === 21) return "Twenty-first";
+        if (d === 22) return "Twenty-second";
+        if (d === 23) return "Twenty-third";
+        if (d === 31) return "Thirty-first";
+        if (d < 20) return units[d];
+        return tens[Math.floor(d / 10)] + (d % 10 !== 0 ? "-" + units[d % 10].toLowerCase() : "");
+    }
+
+    function convertYearToWords(year) {
+        let y = parseInt(year);
+        if (y === 2000) return "Two Thousand";
+        if (y > 2000 && y < 2010) return "Two Thousand " + ["One","Two","Three","Four","Five","Six","Seven","Eight","Nine"][y-2001];
+        
+        let part1 = Math.floor(y / 100);
+        let part2 = y % 100;
+        
+        let p2Words = "";
+        if (part2 === 0) {
+            p2Words = "";
+        } else if (part2 < 20) {
+            p2Words = standardNumbers[part2];
+        } else {
+            p2Words = tens[Math.floor(part2 / 10)] + (part2 % 10 !== 0 ? "-" + standardNumbers[part2 % 10].toLowerCase() : "");
+        }
+        
+        if (part1 === 20) return "Two Thousand" + (p2Words ? " " + p2Words : "");
+        return "Nineteen Hundred" + (p2Words ? " " + p2Words : "");
+    }
+
+    function computeDateInWords(dateStr) {
+        try {
+            if(!dateStr) return "";
+            let parts = dateStr.split('-');
+            if(parts.length !== 3) return dateStr;
+            
+            let dayWord = convertDayToWords(parts[2]);
+            let monthWord = months[parseInt(parts[1]) - 1];
+            let yearWord = convertYearToWords(parts[0]);
+            
+            return `${dayWord} day of ${monthWord} ${yearWord}`;
+        } catch(e) { return dateStr; }
+    }
+
+    function getTodayFormatted() {
+        let today = new Date();
+        let dd = String(today.getDate()).padStart(2, '0');
+        let mm = String(today.getMonth() + 1).padStart(2, '0');
+        let yyyy = today.getFullYear();
+        return `${dd}-${mm}-${yyyy}`;
+    }
+
+    function toggleTrackView() {
+        let mode = document.getElementById('inputTrackMode').value;
+        let mpRow = document.getElementById('certRowMP');
+        let mpMarksRow = document.getElementById('certRowMPMarks');
+        let segment = document.getElementById('certTrackSegment');
+        
+        if (mode === "HS Only") {
+            mpRow.style.display = 'none';
+            mpMarksRow.style.display = 'none';
+            segment.style.display = 'none';
+        } else {
+            mpRow.style.display = 'table-row';
+            mpMarksRow.style.display = 'block';
+            segment.style.display = 'inline';
+        }
+    }
+
+    function updateCert() {
+        let memoVal = document.getElementById('inputMemo').value;
+        let memoDateVal = document.getElementById('inputMemoDate').value;
+        let spDibRow = document.getElementById('certSpDibRow');
+
+        if (!memoVal || memoVal.trim().toUpperCase() === 'NA' || memoVal.trim() === '') {
+            spDibRow.style.display = 'none';
+        } else {
+            spDibRow.style.display = 'grid';
+            document.getElementById('certMemo').innerText = memoVal;
+            document.getElementById('certMemoDate').innerText = memoDateVal;
+        }
+        
+        let currentYear = new Date().getFullYear();
+        let databaseSl = document.getElementById('inputSlNo').value;
+        document.getElementById('certSlNo').innerText = `TFHS/${currentYear}/${databaseSl}`;
+        
+        let liveToday = getTodayFormatted();
+        document.getElementById('certTodayDate').innerText = liveToday;
+        
+        document.getElementById('certName').innerText = document.getElementById('inputName').value.toUpperCase();
+        document.getElementById('certFather').innerText = document.getElementById('inputFather').value.toUpperCase();
+        document.getElementById('certVillage').innerText = document.getElementById('inputVillage').value.toUpperCase();
+        document.getElementById('certPO').innerText = document.getElementById('inputPO').value.toUpperCase();
+        document.getElementById('certPS').innerText = document.getElementById('inputPS').value.toUpperCase();
+        document.getElementById('certDist').innerText = document.getElementById('inputDist').value.toUpperCase();
+        document.getElementById('certPIN').innerText = document.getElementById('inputPIN').value;
+        document.getElementById('certBSID').innerText = document.getElementById('inputBSID').value;
+        
+        let cat = document.getElementById('inputCategory').value;
+        document.getElementById('certCatText1').innerText = cat;
+        document.getElementById('certCatText2').innerText = cat;
+        
+        document.getElementById('certStreamTxt').innerText = document.getElementById('inputStream').value;
+        document.getElementById('certMPYearText').innerText = document.getElementById('inputMPYear').value;
+        document.getElementById('certHSYearText').innerText = document.getElementById('inputHSYear').value;
+        
+        document.getElementById('certMarksMP').innerText = document.getElementById('inputMPScore').value;
+        document.getElementById('certMarksHS').innerText = document.getElementById('inputHSScore').value;
+        
+        let rawDobValue = document.getElementById('inputDOB').value;
+        if(rawDobValue) {
+            let dobParts = rawDobValue.split('-');
+            let displayDob = `${dobParts[2]}-${dobParts[1]}-${dobParts[0]}`;
+            document.getElementById('certDOB').innerText = displayDob;
+            document.getElementById('certDOBWords').innerText = computeDateInWords(rawDobValue);
+        } else {
+            document.getElementById('certDOB').innerText = "";
+            document.getElementById('certDOBWords').innerText = "";
+        }
+        
+        document.getElementById('certLeavingDateText').innerText = document.getElementById('inputLeaving').value;
+        
+        document.getElementById('certClassMP').innerText = "Class-" + document.getElementById('inputClassMP').value;
+        document.getElementById('certAdmDateMP').innerText = document.getElementById('inputAdmDateMP').value;
+        document.getElementById('certRegSlMP').innerText = document.getElementById('inputRegSlMP').value;
+        
+        document.getElementById('certClassHS').innerText = "Class-" + document.getElementById('inputClassHS').value;
+        document.getElementById('certAdmDateHS').innerText = document.getElementById('inputAdmDateHS').value;
+        document.getElementById('certRegSlHS').innerText = document.getElementById('inputRegSlHS').value;
+
+        let sexVal = document.getElementById('inputSex').value;
+        let subParent = sexVal === "Female" ? "Daughter" : "Son";
+        let subPr1 = sexVal === "Female" ? "her" : "his";
+        let subPr2 = sexVal === "Female" ? "she" : "he";
+        let subPr3 = sexVal === "Female" ? "her" : "him";
+
+        document.getElementById('lblParentage').innerText = subParent;
+        document.getElementById('lblPossessive1').innerText = subPr1;
+        document.getElementById('lblPossessive2').innerText = subPr1;
+        document.getElementById('lblSubject').innerText = subPr2;
+        document.getElementById('lblSubject2').innerText = subPr2;
+        document.getElementById('lblObjective').innerText = subPr3;
+
+        let objLabels = document.getElementsByClassName('lblObjectiveText');
+        for(let lbl of objLabels) {
+            lbl.innerText = subPr3;
+        }
+    }
+
+    toggleTrackView();
+    updateCert();
+</script>
+</body>
+</html>
