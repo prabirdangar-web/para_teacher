@@ -337,6 +337,7 @@
                     <select id="inputTrackMode" onchange="toggleTrackView(); updateCert();">
                         <option value="Dual Track" selected>Dual Pass (MP & HS)</option>
                         <option value="HS Only">HS Stream Only</option>
+                        <option value="MP Only">MP Stream Only</option>
                     </select>
                 </div>
             </div>
@@ -393,7 +394,7 @@
                 </div>
             </div>
 
-            <div class="form-line-row">
+            <div class="form-line-row" id="panelStreamRow">
                 <div class="form-group">
                     <label>H.S. Stream Course</label>
                     <select id="inputStream" onchange="updateCert()">
@@ -408,7 +409,7 @@
                 </div>
             </div>
 
-            <div class="form-line-row" style="background:#dad7cd; padding:2px; border-radius:3px;">
+            <div class="form-line-row" id="panelMPRow" style="background:#dad7cd; padding:2px; border-radius:3px;">
                 <div class="form-group">
                     <label>M.P. Class</label>
                     <select id="inputClassMP" onchange="updateCert()">
@@ -437,7 +438,7 @@
                 </div>
             </div>
 
-            <div class="form-line-row" style="background:#dad7cd; padding:2px; border-radius:3px;">
+            <div class="form-line-row" id="panelHSRow" style="background:#dad7cd; padding:2px; border-radius:3px;">
                 <div class="form-group">
                     <label>H.S. Class</label>
                     <select id="inputClassHS" onchange="updateCert()">
@@ -492,7 +493,7 @@
 
             <div class="memo-header" id="certSpDibRow">
                 <div>Ref:</div>
-                <div>SP DIB Vide Memo No.: <span id="certMemo"></span></div>
+                <div>SP DIB Vide Memo No. Bankura , <span id="certMemo"></span></div>
                 <div style="text-align: right;">Dated:- <span id="certMemoDate"></span></div>
             </div>
             
@@ -505,18 +506,17 @@
                 an inhabitant of Village:- <span id="certVillage" class="fill-blank"></span>, 
                 P.O.- <span id="certPO" class="fill-blank"></span>, P.S.- <span id="certPS" class="fill-blank"></span>, 
                 District.- <span id="certDist" class="fill-blank"></span> ; P.I.N.- <span id="certPIN" class="fill-blank"></span> 
-                <span id="certTrackSegment">passed the Madhyamik Pariksha [S.E.] from this school in the year - <span id="certMPYearText" style="font-weight: bold; font-style: normal;"></span> as a <span id="certCatText1" style="font-style: normal;">Regular</span> candidate & </span>Higher Secondary Examination from this school in the year - <span id="certHSYearText" style="font-weight:bold; font-style: normal;"></span> as a <span id="certCatText2" style="font-style: normal;">Regular</span> candidate in <span id="certStreamTxt" style="font-weight:bold; font-style: normal;">General [Science]</span> stream course 
-                and left the school on <span id="certLeavingDateText" class="fill-blank"></span>. During <span id="lblPossessive1">his</span> stay in this school <span id="lblSubject">he</span> always impressed me by <span id="lblPossessive2">his</span> good conduct. 
-                His date of birth recorded in the admission Register is <span id="certDOB" class="fill-blank"></span>. 
+                <span id="certTrackSegment">passed the Madhyamik Pariksha [S.E.] from this school in the year - <span id="certMPYearText" style="font-weight: bold; font-style: normal;"></span> as a <span id="certCatText1" style="font-style: normal;">Regular</span> candidate &amp; </span><span id="certHSSegment">Higher Secondary Examination from this school in the year - <span id="certHSYearText" style="font-weight:bold; font-style: normal;"></span> as a <span id="certCatText2" style="font-style: normal;">Regular</span> candidate in <span id="certStreamTxt" style="font-weight:bold; font-style: normal;">General [Science]</span> stream course </span>and left the school on <span id="certLeavingDateText" class="fill-blank"></span>. During <span id="lblPossessive1">his</span> stay in this school <span id="lblSubject">he</span> always impressed me by <span id="lblPossessive2">his</span> good conduct. 
+                <span id="lblPossessive3">His</span> date of birth recorded in the admission Register is <span id="certDOB" class="fill-blank"></span>. 
                 [ <span id="certDOBWords" style="font-style: normal; font-weight: bold;"></span> ] 
-                So far as my knowledge goes <span id="lblSubject2">he</span> bears a good moral character. I wish <span id="lblObjective">him</span> all success in life.
+                .  So far as my knowledge goes <span id="lblSubject2">he</span> bears a good moral character. I wish <span id="lblObjective">him</span> all success in life.
             </div>
             
             <div class="marks-summary-section">
                 <div class="marks-row" id="certRowMPMarks" style="font-weight: bold;">
                     Marks obtained by <span class="lblObjectiveText">him</span> in the M.P. Examination: <span id="certMarksMP" class="fill-blank"></span>
                 </div>
-                <div class="marks-row" style="font-weight: bold;">
+                <div class="marks-row" id="certRowHSMarks" style="font-weight: bold;">
                     Marks obtained by <span class="lblObjectiveText">him</span> in the H.S. Examination: <span id="certMarksHS" class="fill-blank"></span>
                 </div>
             </div>
@@ -539,7 +539,7 @@
                             <td><span id="certAdmDateMP"></span></td>
                             <td><span id="certRegSlMP"></span></td>
                         </tr>
-                        <tr>
+                        <tr id="certRowHS">
                             <td><strong>H.S.</strong></td>
                             <td><span id="certClassHS">Class-XI</span></td>
                             <td><span id="certAdmDateHS"></span></td>
@@ -548,7 +548,7 @@
                     </tbody>
                 </table>
                 
-                <div style="font-size: 12pt; margin-top: 4px;">
+                <div id="certBSIDRow" style="font-size: 12pt; margin-top: 4px;">
                     <strong>Banglar Shiksha Portal ID:</strong> <span id="certBSID" class="fill-blank" style="font-family:monospace; letter-spacing:0.5px;"></span>
                 </div>
             </div>
@@ -557,16 +557,7 @@
         <div class="cert-footer">
             <div class="seal-block">
                 <div>
-                    <strong>Dated:</strong> <span id="certFooterDate"><p>Date: <span id="today"></span></p>
-
-<script>
-const today = new Date();
-const dd = String(today.getDate()).padStart(2, '0');
-const mm = String(today.getMonth() + 1).padStart(2, '0');
-const yyyy = today.getFullYear();
-
-document.getElementById("today").textContent = `${dd}-${mm}-${yyyy}`;
-</script></span><br>
+                    <span id="certFooterDate"><p>Date: <span id="today"></span></p></span><br>
                     <strong>Place:</strong> Taldangra
                 </div>
                 <div class="seal-area">School Seal</div>
@@ -581,7 +572,7 @@ document.getElementById("today").textContent = `${dd}-${mm}-${yyyy}`;
 
 <script>
     const units = ['', 'First', 'Second', 'Third', 'Fourth', 'Fifth', 'Sixth', 'Seventh', 'Eighth', 'Ninth', 'Tenth', 'Eleventh', 'Twelfth', 'Thirteenth', 'Fourteenth', 'Fifteenth', 'Sixteenth', 'Seventeenth', 'Eighteenth', 'Nineteenth'];
-    const standardNumbers = ['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen'];
+    const standardNumbers = ['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeteen', 'Eighteen', 'Nineteen'];
     const tens = ['', '', 'Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety'];
     const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
@@ -666,18 +657,54 @@ document.getElementById("today").textContent = `${dd}-${mm}-${yyyy}`;
 
     function toggleTrackView() {
         let mode = document.getElementById('inputTrackMode').value;
-        let mpRow = document.getElementById('certRowMP');
-        let mpMarksRow = document.getElementById('certRowMPMarks');
-        let segment = document.getElementById('certTrackSegment');
+        
+        // Certificate Output Elements
+        let certMpRow = document.getElementById('certRowMP');
+        let certHsRow = document.getElementById('certRowHS');
+        let certMpMarksRow = document.getElementById('certRowMPMarks');
+        let certHsMarksRow = document.getElementById('certRowHSMarks');
+        let certMpSegment = document.getElementById('certTrackSegment');
+        let certHsSegment = document.getElementById('certHSSegment');
+        
+        // Counterfoil Input Panels
+        let panelMpRow = document.getElementById('panelMPRow');
+        let panelHsRow = document.getElementById('panelHSRow');
+        let panelStreamRow = document.getElementById('panelStreamRow');
         
         if (mode === "HS Only") {
-            mpRow.style.display = 'none';
-            mpMarksRow.style.display = 'none';
-            segment.style.display = 'none';
+            certMpRow.style.display = 'none';
+            certHsRow.style.display = 'table-row';
+            certMpMarksRow.style.display = 'none';
+            certHsMarksRow.style.display = 'block';
+            certMpSegment.style.display = 'none';
+            certHsSegment.style.display = 'inline';
+            
+            panelMpRow.style.display = 'none';
+            panelHsRow.style.display = 'flex';
+            panelStreamRow.style.display = 'flex';
+        } else if (mode === "MP Only") {
+            certMpRow.style.display = 'table-row';
+            certHsRow.style.display = 'none';
+            certMpMarksRow.style.display = 'block';
+            certHsMarksRow.style.display = 'none';
+            certMpSegment.style.display = 'inline';
+            certHsSegment.style.display = 'none';
+            
+            panelMpRow.style.display = 'flex';
+            panelHsRow.style.display = 'none';
+            panelStreamRow.style.display = 'none'; // Stream not applicable to MP
         } else {
-            mpRow.style.display = 'table-row';
-            mpMarksRow.style.display = 'block';
-            segment.style.display = 'inline';
+            // Dual Track Mode
+            certMpRow.style.display = 'table-row';
+            certHsRow.style.display = 'table-row';
+            certMpMarksRow.style.display = 'block';
+            certHsMarksRow.style.display = 'block';
+            certMpSegment.style.display = 'inline';
+            certHsSegment.style.display = 'inline';
+            
+            panelMpRow.style.display = 'flex';
+            panelHsRow.style.display = 'flex';
+            panelStreamRow.style.display = 'flex';
         }
     }
 
@@ -700,6 +727,7 @@ document.getElementById("today").textContent = `${dd}-${mm}-${yyyy}`;
         
         let liveToday = getTodayFormatted();
         document.getElementById('certTodayDate').innerText = liveToday;
+        document.getElementById("today").textContent = liveToday;
         
         document.getElementById('certName').innerText = document.getElementById('inputName').value.toUpperCase();
         document.getElementById('certFather').innerText = document.getElementById('inputFather').value.toUpperCase();
@@ -708,7 +736,14 @@ document.getElementById("today").textContent = `${dd}-${mm}-${yyyy}`;
         document.getElementById('certPS').innerText = document.getElementById('inputPS').value.toUpperCase();
         document.getElementById('certDist').innerText = document.getElementById('inputDist').value.toUpperCase();
         document.getElementById('certPIN').innerText = document.getElementById('inputPIN').value;
-        document.getElementById('certBSID').innerText = document.getElementById('inputBSID').value;
+        let bsidVal = document.getElementById('inputBSID').value;
+        let bsidRow = document.getElementById('certBSIDRow');
+        if (!bsidVal || bsidVal.trim().toUpperCase() === 'NA' || bsidVal.trim() === '') {
+            bsidRow.style.display = 'none';
+        } else {
+            bsidRow.style.display = 'block';
+            document.getElementById('certBSID').innerText = bsidVal;
+        }
         
         let cat = document.getElementById('inputCategory').value;
         document.getElementById('certCatText1').innerText = cat;
@@ -745,12 +780,14 @@ document.getElementById("today").textContent = `${dd}-${mm}-${yyyy}`;
         let sexVal = document.getElementById('inputSex').value;
         let subParent = sexVal === "Female" ? "Daughter" : "Son";
         let subPr1 = sexVal === "Female" ? "her" : "his";
+        let subPr1Cap = sexVal === "Female" ? "Her" : "His";
         let subPr2 = sexVal === "Female" ? "she" : "he";
         let subPr3 = sexVal === "Female" ? "her" : "him";
 
         document.getElementById('lblParentage').innerText = subParent;
         document.getElementById('lblPossessive1').innerText = subPr1;
         document.getElementById('lblPossessive2').innerText = subPr1;
+        document.getElementById('lblPossessive3').innerText = subPr1Cap;
         document.getElementById('lblSubject').innerText = subPr2;
         document.getElementById('lblSubject2').innerText = subPr2;
         document.getElementById('lblObjective').innerText = subPr3;
