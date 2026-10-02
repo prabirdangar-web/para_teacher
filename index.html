@@ -1,805 +1,603 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<title>School Leaving Certificate Matrix - Landscape Dual Ledger</title>
-<style>
-    *, *::before, *::after {
-        box-sizing: border-box;
-    }
-    @page {
-        size: A4 landscape;
-        margin: 4mm;
-    }
-    body {
-        margin: 0;
-        padding: 0;
-        font-family: 'Times New Roman', Times, serif;
-        color: #0b1a30;
-        background-color: #f2f1ed;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TFHS Para Teacher Dashboard</title>
     
-    /* UTILITY INTERFACE - HIDDEN DURING PRINTING */
-    .action-bar {
-        background-color: #0b2240;
-        padding: 6px 12px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        color: #f1c40f;
-        font-family: system-ui, sans-serif;
-        font-size: 9.5pt;
-    }
-    .print-btn {
-        background-color: #d35400;
-        color: #fff;
-        border: none;
-        padding: 5px 12px;
-        font-size: 9pt;
-        font-weight: bold;
-        border-radius: 4px;
-        cursor: pointer;
-    }
-
-    /* SAFE AREA RATIO: 42% COUNTERFOIL | 58% BOUNDED CERTIFICATE FOR NO MARGIN CUT */
-    .wrapper {
-        display: grid;
-        grid-template-columns: 42% 58%;
-        width: 100%;
-        gap: 12px;
-        padding: 2px;
-    }
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
-    /* LEFT MODULE: COUNTERFOIL DATA PARAMS BOX */
-    .dashboard-panel {
-        border: 2px dashed #0b2240;
-        padding: 10px;
-        background-color: #e5e3db;
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-    }
-    .panel-title {
-        font-size: 9.5pt;
-        font-weight: bold;
-        text-align: center;
-        border-bottom: 2px solid #0b2240;
-        padding-bottom: 2px;
-        margin-bottom: 8px;
-        color: #0b2240;
-        text-transform: uppercase;
-    }
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
     
-    .form-line-row {
-        display: flex;
-        gap: 6px;
-        margin-bottom: 5px;
-    }
-    .form-group {
-        display: flex;
-        flex-direction: column;
-        flex: 1;
-    }
-    .form-group.flex-2 { flex: 2; }
-    .form-group.flex-3 { flex: 3; }
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    .form-group label {
-        font-size: 7.5pt;
-        font-weight: bold;
-        margin-bottom: 1px;
-        color: #1a3a5f;
-    }
-    .form-group input, .form-group select {
-        padding: 2px 4px;
-        font-size: 8.5pt;
-        border: 1px solid #99aab8;
-        border-radius: 3px;
-        background-color: #fff;
-        color: #0b2240;
-        height: 23px;
-    }
-    
-    .rec-sig-box {
-        margin-top: 10px;
-        padding: 5px;
-        text-align: center;
-    }
-    .sig-dotted-line {
-        border-top: 1px dotted #0b2240;
-        width: 85%;
-        margin: 0 auto 4px auto;
-    }
-    .sig-caption {
-        font-size: 8.5pt;
-        font-weight: bold;
-        color: #1a3a5f;
-    }
-
-    /* RIGHT MODULE: HIGH-LEGIBILITY CERTIFICATE WITH BOUNDED MARGIN RULES */
-    .main-certificate {
-        border: 4px double #0b2240;
-        padding: 12px 18px;
-        background-color: #ffffff;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        max-width: 530px; /* Constrains boundaries strictly to clear right margin rollers */
-        overflow: hidden;
-    }
-    
-    /* ENLARGED RELOCATED DIB TRACK - NO UNDERLINE, PLACED HIGHER UP */
-    .memo-header {
-        display: grid;
-        grid-template-columns: 10% 55% 35%;
-        font-family: 'Times New Roman', Times, serif;
-        font-size: 13.5pt; /* More Prominent Size */
-        font-weight: bold;
-        color: #0b2240;
-        padding: 4px 0;
-        margin-top: 2px;
-        margin-bottom: 2px;
-    }
-    
-    /* DOUBLE DOTTED DECORATIVE BORDER BLOCK */
-    .double-dotted-separator {
-        border-top: 3px dotted #0b2240;
-        border-bottom: 1px dotted #0b2240;
-        height: 6px;
-        width: 100%;
-        margin: 6px 0;
-    }
-    
-    .cert-header {
-        display: flex;
-        justify-content: space-between;
-        font-size: 9.5pt;
-        font-weight: bold;
-        color: #0b2240;
-        border-bottom: 1px solid #0b2240;
-        padding-bottom: 3px;
-    }
-    
-    .school-info {
-        text-align: center;
-        margin-top: 6px;
-        color: #0b2240;
-        padding: 2px;
-    }
-    .school-title {
-        font-size: 16pt;
-        font-weight: bold;
-        text-transform: uppercase;
-        margin: 0;
-        letter-spacing: 0.5px;
-    }
-    .school-subtitle {
-        font-size: 13pt;
-        font-style: italic;
-        font-weight: bold;
-        margin: 4px 0 0 0;
-    }
-    
-    .cert-title {
-        font-size: 12.5pt;
-        text-decoration: underline;
-        font-weight: bold;
-        text-align: center;
-        margin: 10px 0 5px 0;
-        color: #0b2240;
-    }
-
-    /* SLIGHTLY SMALLER, REFINED TYPOGRAPHY FOR PRIMARY CONTENT */
-    .text-block-ten-lines {
-        font-size: 11.5pt;
-        font-style: italic; /* Styled italic face option */
-        line-height: 1.65;
-        text-align: justify;
-        color: #111;
-        margin-bottom: 8px;
-    }
-    
-    .fill-blank {
-        font-family: 'lucida bright', Times, serif;
-        font-weight: bold;
-        font-style: normal;
-        border-bottom: 1px solid #0b2240;
-        padding: 0 2px;
-        color: #0b2240;
-    }
-    
-    .marks-summary-section {
-        margin-top: 4px;
-        font-size: 11pt;
-    }
-    .marks-row {
-        margin-bottom: 3px;
-    }
-    
-    .admission-box {
-        margin-top: 6px;
-        border-top: 1px dashed #0b2240;
-        padding-top: 6px;
-    }
-    .admission-title {
-        font-size: 9.5pt;
-        text-decoration: underline;
-        font-weight: bold;
-        margin-bottom: 5px;
-        color: #0b2240;
-    }
-    
-    /* REWORKED TABLE BORDERS AND HEADERS: BLACK ON WHITE, CORE SIMPLE BOX RECTANGLE */
-    .matrix-table {
-        width: 100%;
-        border-collapse: collapse;
-        font-size: 12pt;
-        border: 1px solid #000000;
-    }
-    .matrix-table th {
-        background-color: #ffffff;
-        color: #000000;
-        text-align: left;
-        font-weight: bold;
-        padding: 5px;
-        border: 1px solid #000000;
-    }
-    .matrix-table td {
-        padding: 5px;
-        border: 1px solid #000000;
-        color: #222;
-    }
-
-    .cert-footer {
-        margin-top: 10px;
-        display: grid;
-        grid-template-columns: 50% 50%;
-        align-items: flex-end;
-        font-size: 9.5pt;
-        color: #0b2240;
-    }
-    .seal-block {
-        display: flex;
-        gap: 20px;
-        align-items: center;
-    }
-    .seal-area {
-        width: 60px;
-        height: 60px;
-        border: 1px dashed #0b2240;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 7.5pt;
-    }
-    .signature-area {
-        text-align: center;
-    }
-    .sig-line {
-        border-top: 1px dashed #0b2240;
-        width: 130px;
-        margin: 0 auto 3px auto;
-    }
-    
-    @media print {
-        .action-bar {
-            display: none !important;
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            900: '#0f172a',
+                            800: '#1e293b',
+                            primary: '#2563eb',
+                            secondary: '#3b82f6'
+                        }
+                    }
+                }
+            }
         }
+    </script>
+
+    <style>
         body {
-            background-color: #f2f1ed !important;
-            -webkit-print-color-adjust: exact;
-            print-color-adjust: exact;
+            font-family: 'Inter', sans-serif;
+            background-color: #f1f5f9; /* slate-100 */
         }
-        .wrapper {
-            grid-template-columns: 42% 58% !important;
+        
+        /* Tab Navigation */
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.3s ease-in-out; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-    }
-</style>
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        /* Print Specific Styles */
+        @media print {
+            @page { size: landscape; margin: 10mm; }
+            body { background: white; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .no-print { display: none !important; }
+            .print-only { display: block !important; }
+            .print-full-width { width: 100% !important; max-width: none !important; margin: 0 !important; padding: 0 !important; }
+            
+            /* Typography for print */
+            body, table { font-size: 10pt; }
+            h1 { font-size: 14pt !important; text-align: center; font-weight: bold; margin-bottom: 4px; }
+            h2 { font-size: 12pt !important; text-align: center; margin-bottom: 12px; }
+            
+            /* Table Print Styles */
+            .print-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+            .print-table th, .print-table td { border: 1px solid #000; padding: 6px 8px; text-align: left; vertical-align: top; }
+            .print-table th { background-color: #f1f5f9 !important; font-weight: bold; text-align: center; }
+            .print-table-group-header { background-color: #e2e8f0 !important; font-weight: bold; text-align: left !important; }
+            
+            /* Remove shadows and borders from containers */
+            .shadow-sm, .shadow, .rounded-xl, .border { box-shadow: none !important; border-radius: 0 !important; border: none !important; }
+        }
+        
+        .print-only { display: none; }
+    </style>
 </head>
-<body>
+<body class="flex h-screen overflow-hidden text-slate-800">
 
-<div class="action-bar">
-    <div><strong>School Matrix System:</strong> Document Ledger (Reorganized Matrix Layout)</div>
-    <button class="print-btn" onclick="printAndIncrement()">Print Document</button>
-</div>
-
-<div class="wrapper">
-    <div class="dashboard-panel">
-        <div>
-            <div class="panel-title">School Counterfoil / Foil Logs</div>
-            
-            <div class="form-line-row">
-                <div class="form-group flex-2">
-                    <label>Ref: SP DIB Vide Memo No. (Type 'NA' to hide)</label>
-                    <input type="text" id="inputMemo" value="NA" oninput="updateCert()">
-                </div>
-                <div class="form-group flex-1">
-                    <label>Memo Date</label>
-                    <input type="text" id="inputMemoDate" value="NA" oninput="updateCert()">
-                </div>
-            </div>
-
-            <div class="form-line-row">
-                <div class="form-group">
-                    <label>Sl No</label>
-                    <input type="text" id="inputSlNo" value="20" oninput="updateCert()">
-                </div>
-                <div class="form-group">
-                    <label>Gender / Sex</label>
-                    <select id="inputSex" onchange="updateCert()">
-                        <option value="Male" selected>Male</option>
-                        <option value="Female">Female</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Track Mode</label>
-                    <select id="inputTrackMode" onchange="toggleTrackView(); updateCert();">
-                        <option value="Dual Track" selected>Dual Pass (MP & HS)</option>
-                        <option value="HS Only">HS Stream Only</option>
-                        <option value="MP Only">MP Stream Only</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="form-line-row">
-                <div class="form-group">
-                    <label>Student Name</label>
-                    <input type="text" id="inputName" value="Sample Scholar" oninput="updateCert()">
-                </div>
-                <div class="form-group">
-                    <label>Father's Name</label>
-                    <input type="text" id="inputFather" value="Guardian Name" oninput="updateCert()">
-                </div>
-            </div>
-
-            <div class="form-line-row">
-                <div class="form-group flex-2">
-                    <label>Village Name</label>
-                    <input type="text" id="inputVillage" value="Taldangra" oninput="updateCert()">
-                </div>
-                <div class="form-group">
-                    <label>P.O.</label>
-                    <input type="text" id="inputPO" value="Taldangra" oninput="updateCert()">
-                </div>
-                <div class="form-group">
-                    <label>P.S.</label>
-                    <input type="text" id="inputPS" value="Taldangra" oninput="updateCert()">
-                </div>
-            </div>
-
-            <div class="form-line-row">
-                <div class="form-group flex-2">
-                    <label>District</label>
-                    <input type="text" id="inputDist" value="Bankura" oninput="updateCert()">
-                </div>
-                <div class="form-group">
-                    <label>PIN Code</label>
-                    <input type="text" id="inputPIN" value="722152" oninput="updateCert()">
-                </div>
-                <div class="form-group">
-                    <label>Leaving Date</label>
-                    <input type="text" id="inputLeaving" value="30-06-2026" oninput="updateCert()">
-                </div>
-            </div>
-
-            <div class="form-line-row">
-                <div class="form-group flex-1">
-                    <label>DOB (Calendar Selection)</label>
-                    <input type="date" id="inputDOB" value="1969-04-10" onchange="updateCert()">
-                </div>
-                <div class="form-group flex-2">
-                    <label>Banglar Shiksha Portal ID</label>
-                    <input type="text" id="inputBSID" value="19132104401" oninput="updateCert()">
-                </div>
-            </div>
-
-            <div class="form-line-row" id="panelStreamRow">
-                <div class="form-group">
-                    <label>H.S. Stream Course</label>
-                    <select id="inputStream" onchange="updateCert()">
-                        <option value="General [Science]" selected>General [Science]</option>
-                        <option value="General [Arts]">General [Arts]</option>
-                        <option value="General [Commerce]">General [Commerce]</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Enrollment Category</label>
-                    <input type="text" id="inputCategory" value="Regular" oninput="updateCert()">
-                </div>
-            </div>
-
-            <div class="form-line-row" id="panelMPRow" style="background:#dad7cd; padding:2px; border-radius:3px;">
-                <div class="form-group">
-                    <label>M.P. Class</label>
-                    <select id="inputClassMP" onchange="updateCert()">
-                        <option value="V" selected>Class-V</option>
-                        <option value="VI">Class-VI</option>
-                        <option value="VII">Class-VII</option>
-                        <option value="VIII">Class-VIII</option>
-                        <option value="IX">Class-IX</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>M.P. Pass Yr</label>
-                    <input type="text" id="inputMPYear" value="1985" oninput="updateCert()">
-                </div>
-                <div class="form-group">
-                    <label>M.P. Adm Date</label>
-                    <input type="text" id="inputAdmDateMP" value="02-01-1980" oninput="updateCert()">
-                </div>
-                <div class="form-group">
-                    <label>M.P. Score</label>
-                    <input type="text" id="inputMPScore" value="560/700" oninput="updateCert()">
-                </div>
-                <div class="form-group">
-                    <label>M.P. Adm Sl</label>
-                    <input type="text" id="inputRegSlMP" value="104" oninput="updateCert()">
-                </div>
-            </div>
-
-            <div class="form-line-row" id="panelHSRow" style="background:#dad7cd; padding:2px; border-radius:3px;">
-                <div class="form-group">
-                    <label>H.S. Class</label>
-                    <select id="inputClassHS" onchange="updateCert()">
-                        <option value="XI" selected>Class-XI</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>H.S. Pass Yr</label>
-                    <input type="text" id="inputHSYear" value="1987" oninput="updateCert()">
-                </div>
-                <div class="form-group">
-                    <label>H.S. Adm Date</label>
-                    <input type="text" id="inputAdmDateHS" value="15-06-1985" oninput="updateCert()">
-                </div>
-                <div class="form-group">
-                    <label>H.S. Score</label>
-                    <input type="text" id="inputHSScore" value="780/1000" oninput="updateCert()">
-                </div>
-                <div class="form-group">
-                    <label>H.S. Adm Sl</label>
-                    <input type="text" id="inputRegSlHS" value="45" oninput="updateCert()">
-                </div>
-            </div>
+    <!-- Sidebar -->
+    <aside class="w-64 bg-brand-900 text-slate-300 flex flex-col no-print z-20 flex-shrink-0">
+        <div class="p-6 border-b border-brand-800">
+            <h2 class="text-xl font-bold text-white leading-tight">TFHS<br><span class="text-brand-secondary text-sm font-medium">Taldangra Fulmati H.S.</span></h2>
+            <p class="text-xs text-slate-400 mt-2">Para Teacher Management</p>
         </div>
+        <nav class="flex-1 overflow-y-auto py-4">
+            <ul class="space-y-1 px-3">
+                <li>
+                    <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-lg bg-brand-primary text-white transition-colors text-left">
+                        <i class="fa-solid fa-chart-pie w-5 text-center"></i>
+                        <span class="font-medium">Dashboard</span>
+                    </button>
+                </li>
+                <li>
+                    <button onclick="switchTab('database')" id="nav-database" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-brand-800 hover:text-white transition-colors text-left text-slate-300">
+                        <i class="fa-solid fa-users w-5 text-center"></i>
+                        <span class="font-medium">Database</span>
+                    </button>
+                </li>
+                <li>
+                    <button onclick="switchTab('report-m')" id="nav-report-m" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-brand-800 hover:text-white transition-colors text-left text-slate-300">
+                        <i class="fa-regular fa-calendar-check w-5 text-center"></i>
+                        <span class="font-medium">Report (M)</span>
+                    </button>
+                </li>
+                <li>
+                    <button onclick="switchTab('format-cpf')" id="nav-format-cpf" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-brand-800 hover:text-white transition-colors text-left text-slate-300">
+                        <i class="fa-solid fa-file-invoice-dollar w-5 text-center"></i>
+                        <span class="font-medium">FORMAT (CPF)</span>
+                    </button>
+                </li>
+            </ul>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 flex flex-col h-screen relative print-full-width bg-white">
         
-        <div class="rec-sig-box">
-            <div class="sig-dotted-line"></div>
-            <div class="sig-caption">Signature of Headmaster with Date</div>
-        </div>
-        <div class="rec-sig-box" style="margin-top: 5px;">
-            <div class="sig-dotted-line"></div>
-            <div class="sig-caption">Signature of Candidate / Guardian</div>
-        </div>
-    </div>
-    
-    <div class="main-certificate">
-        <div>
-            <div class="cert-header">
-                <div>Memo No: <span id="certSlNo" class="fill-blank">TFHS/2026/20</span></div>
-                <div>Date: <span id="certTodayDate" class="fill-blank">30-06-2026</span></div>
-                <div style="font-size: 7.5pt;">
-                    Index: U1-083 &nbsp;|&nbsp; HS Code: 114071 &nbsp;|&nbsp; VTC: 5006
+        <!-- Desktop Header -->
+        <header class="bg-white border-b border-slate-200 px-6 py-4 flex justify-between items-center no-print z-10">
+            <div>
+                <h1 class="text-2xl font-bold text-slate-800" id="header-title">Dashboard Overview</h1>
+            </div>
+            <div class="flex items-center space-x-4 bg-slate-50 p-2 rounded-lg border border-slate-200">
+                <div class="flex items-center space-x-2">
+                    <label for="start-month" class="text-sm font-semibold text-slate-600"><i class="fa-solid fa-clock-rotate-left mr-1"></i> Start Cycle:</label>
+                    <input type="month" id="start-month" class="text-sm border border-slate-300 rounded px-2 py-1 focus:outline-none focus:border-brand-primary" onchange="handleCycleChange()">
                 </div>
+                <div class="h-6 w-px bg-slate-300"></div>
+                <button onclick="window.print()" class="px-4 py-1.5 bg-white border border-slate-300 text-slate-700 text-sm font-medium rounded hover:bg-slate-100 transition-colors flex items-center shadow-sm">
+                    <i class="fa-solid fa-print mr-2"></i> Print
+                </button>
             </div>
-            
-            <div class="school-info">
-                <h1 class="school-title">Taldangra Fulmati High School [H.S.]</h1>
-                <p class="school-subtitle">P.O. - Taldangra, P.S. - Taldangra, Dist. - Bankura, P.I.N. - 722152</p>
-            </div>
-            
-            <div class="double-dotted-separator"></div>
+        </header>
 
-            <div class="memo-header" id="certSpDibRow">
-                <div>Ref:</div>
-                <div>SP DIB Vide Memo No. Bankura , <span id="certMemo"></span></div>
-                <div style="text-align: right;">Dated:- <span id="certMemoDate"></span></div>
-            </div>
+        <!-- Scrollable Content Area -->
+        <div class="flex-1 overflow-y-auto p-6 relative print-full-width">
             
-            <div class="cert-title">To whom it may concern:</div>
-            
-            <div class="text-block-ten-lines">
-                This is to certify that <span id="certName" class="fill-blank"></span>; 
-                <span id="lblParentage" style="font-weight: bold; font-style: normal;">Son</span> of 
-                <span id="certFather" class="fill-blank"></span> ; 
-                an inhabitant of Village:- <span id="certVillage" class="fill-blank"></span>, 
-                P.O.- <span id="certPO" class="fill-blank"></span>, P.S.- <span id="certPS" class="fill-blank"></span>, 
-                District.- <span id="certDist" class="fill-blank"></span> ; P.I.N.- <span id="certPIN" class="fill-blank"></span> 
-                <span id="certTrackSegment">passed the Madhyamik Pariksha [S.E.] from this school in the year - <span id="certMPYearText" style="font-weight: bold; font-style: normal;"></span> as a <span id="certCatText1" style="font-style: normal;">Regular</span> candidate &amp; </span><span id="certHSSegment">Higher Secondary Examination from this school in the year - <span id="certHSYearText" style="font-weight:bold; font-style: normal;"></span> as a <span id="certCatText2" style="font-style: normal;">Regular</span> candidate in <span id="certStreamTxt" style="font-weight:bold; font-style: normal;">General [Science]</span> stream course </span>and left the school on <span id="certLeavingDateText" class="fill-blank"></span>. During <span id="lblPossessive1">his</span> stay in this school <span id="lblSubject">he</span> always impressed me by <span id="lblPossessive2">his</span> good conduct. 
-                <span id="lblPossessive3">His</span> date of birth recorded in the admission Register is <span id="certDOB" class="fill-blank"></span>. 
-                [ <span id="certDOBWords" style="font-style: normal; font-weight: bold;"></span> ] 
-                .  So far as my knowledge goes <span id="lblSubject2">he</span> bears a good moral character. I wish <span id="lblObjective">him</span> all success in life.
-            </div>
-            
-            <div class="marks-summary-section">
-                <div class="marks-row" id="certRowMPMarks" style="font-weight: bold;">
-                    Marks obtained by <span class="lblObjectiveText">him</span> in the M.P. Examination: <span id="certMarksMP" class="fill-blank"></span>
+            <!-- TAB: Dashboard -->
+            <section id="tab-dashboard" class="tab-content active max-w-6xl mx-auto">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 flex items-center border-l-4 border-l-blue-500">
+                        <div class="w-12 h-12 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-xl">
+                            <i class="fa-solid fa-users"></i>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-slate-500">Total Teachers</p>
+                            <h3 class="text-2xl font-bold text-slate-800" id="dash-total-teachers">0</h3>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 flex items-center border-l-4 border-l-emerald-500">
+                        <div class="w-12 h-12 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-xl">
+                            <i class="fa-solid fa-money-bill-wave"></i>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-slate-500">Monthly Net Disbursed</p>
+                            <h3 class="text-2xl font-bold text-slate-800" id="dash-total-net">₹0</h3>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 flex items-center border-l-4 border-l-purple-500">
+                        <div class="w-12 h-12 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center text-xl">
+                            <i class="fa-solid fa-piggy-bank"></i>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-slate-500">Monthly EPF Contribution</p>
+                            <h3 class="text-2xl font-bold text-slate-800" id="dash-total-epf">₹0</h3>
+                        </div>
+                    </div>
                 </div>
-                <div class="marks-row" id="certRowHSMarks" style="font-weight: bold;">
-                    Marks obtained by <span class="lblObjectiveText">him</span> in the H.S. Examination: <span id="certMarksHS" class="fill-blank"></span>
-                </div>
-            </div>
-            
-            <div class="admission-box">
-                <div class="admission-title">Institutional Admission Records:</div>
-                <table class="matrix-table">
-                    <thead>
-                        <tr>
-                            <th>Academic Track / Course</th>
-                            <th>Class Admitted</th>
-                            <th>Admission Date</th>
-                            <th>Admission Register Sl No</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr id="certRowMP">
-                            <td><strong>M.P.(S.E.)</strong></td>
-                            <td><span id="certClassMP">Class-V</span></td>
-                            <td><span id="certAdmDateMP"></span></td>
-                            <td><span id="certRegSlMP"></span></td>
-                        </tr>
-                        <tr id="certRowHS">
-                            <td><strong>H.S.</strong></td>
-                            <td><span id="certClassHS">Class-XI</span></td>
-                            <td><span id="certAdmDateHS"></span></td>
-                            <td><span id="certRegSlHS"></span></td>
-                        </tr>
-                    </tbody>
-                </table>
                 
-                <div id="certBSIDRow" style="font-size: 12pt; margin-top: 4px;">
-                    <strong>Banglar Shiksha Portal ID:</strong> <span id="certBSID" class="fill-blank" style="font-family:monospace; letter-spacing:0.5px;"></span>
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+                    <h3 class="text-lg font-bold text-slate-800 mb-4 border-b pb-2">System Notice</h3>
+                    <p class="text-slate-600 text-sm leading-relaxed mb-4">
+                        Welcome to the unified Para Teacher Management System for Taldangra Fulmati High School (H.S.).
+                        The database has been updated: <b>Sailen Kr. Barui</b> has been marked as transferred and removed from active payroll. 
+                        Three new <b>Santali Medium</b> para teachers have been added to the master roster.
+                    </p>
+                    <p class="text-slate-600 text-sm leading-relaxed">
+                        Use the top control panel to select the starting month for generating reports. The system will automatically calculate the <b>11th to 10th</b> billing cycle across 4 consecutive months for both Report (M) and FORMAT (CPF).
+                    </p>
                 </div>
-            </div>
-        </div>
-        
-        <div class="cert-footer">
-            <div class="seal-block">
-                <div>
-                    <span id="certFooterDate"><p>Date: <span id="today"></span></p></span><br>
-                    <strong>Place:</strong> Taldangra
+            </section>
+
+            <!-- TAB: Database -->
+            <section id="tab-database" class="tab-content max-w-7xl mx-auto">
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                    <div class="px-6 py-4 border-b border-slate-200 bg-slate-50 flex justify-between items-center no-print">
+                        <h3 class="font-bold text-slate-800">Master Employee Database</h3>
+                        <span class="text-xs bg-brand-100 text-brand-800 px-2 py-1 rounded font-medium border border-brand-200">Active Payroll Only</span>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm text-left">
+                            <thead class="text-xs text-slate-600 uppercase bg-slate-100 border-b border-slate-200">
+                                <tr>
+                                    <th class="px-4 py-3 text-center">Sl</th>
+                                    <th class="px-4 py-3">Name</th>
+                                    <th class="px-4 py-3">D.O.B.</th>
+                                    <th class="px-4 py-3">D.O.J.</th>
+                                    <th class="px-4 py-3">Qualification</th>
+                                    <th class="px-4 py-3">Medium</th>
+                                    <th class="px-4 py-3">Account No</th>
+                                    <th class="px-4 py-3">IFS Code</th>
+                                    <th class="px-4 py-3">Aadhaar</th>
+                                </tr>
+                            </thead>
+                            <tbody id="db-table-body" class="divide-y divide-slate-200">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-                <div class="seal-area">School Seal</div>
-            </div>
-            <div class="signature-area">
-                <div class="sig-line"></div>
-                <strong>Headmaster</strong>
-            </div>
+            </section>
+
+            <!-- TAB: Report M -->
+            <section id="tab-report-m" class="tab-content print-full-width mx-auto">
+                <!-- Print Headers -->
+                <div class="print-only mb-6">
+                    <h1>TALDANGRA FULMATI HIGH SCHOOL (H.S.)</h1>
+                    <h2>MONTHLY RETURN OF PARA TEACHERS [REPORT (M)]</h2>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden print-full-width">
+                    <div class="px-6 py-4 border-b border-slate-200 bg-slate-50 flex justify-between items-center flex-wrap gap-4 no-print">
+                        <div>
+                            <h3 class="font-bold text-slate-800">Report (M) - Monthly Return</h3>
+                            <p class="text-xs text-slate-500 mt-1">Grouped by medium</p>
+                        </div>
+                        <div class="flex items-center space-x-2 bg-white border border-slate-300 rounded px-3 py-1.5 shadow-sm">
+                            <span class="text-xs font-semibold text-slate-600">Select Cycle:</span>
+                            <select id="report-m-cycle-select" class="text-sm outline-none bg-transparent font-medium text-brand-primary cursor-pointer" onchange="renderReportM()">
+                                <!-- Options populated by JS -->
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- Dynamic cycle display for print and screen -->
+                    <div class="px-6 py-3 bg-blue-50 border-b border-blue-100 text-center print-only-header">
+                        <p class="text-sm font-semibold text-blue-900">
+                            Billing Cycle: <span id="report-m-cycle-display" class="font-bold tracking-wide">--/--/---- to --/--/----</span>
+                        </p>
+                    </div>
+
+                    <div class="overflow-x-auto print-full-width p-0 md:p-4">
+                        <table class="w-full text-sm text-left print-table">
+                            <thead class="text-xs text-slate-700 bg-slate-100 uppercase">
+                                <tr>
+                                    <th class="w-12 text-center py-3">Sl<br>No</th>
+                                    <th class="py-3 px-2">Name of Para Teacher</th>
+                                    <th class="py-3 px-2">Qualification &<br>Date of joining</th>
+                                    <th class="text-center py-3 px-2">Working<br>Days</th>
+                                    <th class="text-center py-3 px-2">Closing<br>Days</th>
+                                    <th class="text-center py-3 px-2">C.L.<br>Enjoyed</th>
+                                    <th class="text-center py-3 px-2">Other<br>Leave</th>
+                                    <th class="py-3 px-2">Remarks</th>
+                                    <th class="py-3 px-2 w-32">Signature</th>
+                                    <th class="py-3 px-2">AADHAAR</th>
+                                </tr>
+                            </thead>
+                            <tbody id="report-m-body" class="divide-y divide-slate-200">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- Print Signatures -->
+                    <div class="print-only mt-16 px-8 flex justify-between text-sm font-bold">
+                        <div>Signature of Preparing Authority</div>
+                        <div>Signature of HOI / TIC with Seal</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB: Format CPF -->
+            <section id="tab-format-cpf" class="tab-content print-full-width mx-auto">
+                <!-- Print Headers -->
+                <div class="print-only mb-6">
+                    <h1>TALDANGRA FULMATI HIGH SCHOOL (H.S.)</h1>
+                    <h2>SALARY STATEMENT & CPF DEDUCTION [FORMAT (CPF)]</h2>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden print-full-width">
+                    <div class="px-6 py-4 border-b border-slate-200 bg-slate-50 flex justify-between items-center flex-wrap gap-4 no-print">
+                        <div>
+                            <h3 class="font-bold text-slate-800">FORMAT (CPF) - Salary Statement</h3>
+                            <p class="text-xs text-slate-500 mt-1">Details generated with fixed salary structure</p>
+                        </div>
+                        <div class="flex items-center space-x-2 bg-white border border-slate-300 rounded px-3 py-1.5 shadow-sm">
+                            <span class="text-xs font-semibold text-slate-600">Select Cycle:</span>
+                            <select id="cpf-cycle-select" class="text-sm outline-none bg-transparent font-medium text-brand-primary cursor-pointer" onchange="renderFormatCPF()">
+                                <!-- Options populated by JS -->
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Dynamic cycle display for print and screen -->
+                    <div class="px-6 py-3 bg-blue-50 border-b border-blue-100 text-center print-only-header">
+                        <p class="text-sm font-semibold text-blue-900">
+                            Billing Cycle: <span id="cpf-cycle-display" class="font-bold tracking-wide">--/--/---- to --/--/----</span>
+                        </p>
+                    </div>
+
+                    <div class="overflow-x-auto print-full-width p-0 md:p-4">
+                        <table class="w-full text-sm text-left print-table">
+                            <thead class="text-xs text-slate-700 bg-slate-100 uppercase text-center">
+                                <tr>
+                                    <th class="w-10 py-3">Sl<br>No</th>
+                                    <th class="py-3 px-2 text-left">Name of Employee</th>
+                                    <th class="py-3 px-2 text-left">Bank & Branch Name</th>
+                                    <th class="py-3 px-2">Account No</th>
+                                    <th class="py-3 px-2">IFS Code</th>
+                                    <th class="py-3 px-2">Nos of Days<br>Leave W/O Pay</th>
+                                    <th class="py-3 px-2">Gross<br>Salary</th>
+                                    <th class="py-3 px-2">P.TAX</th>
+                                    <th class="py-3 px-2">EPF<br>Deducted</th>
+                                    <th class="py-3 px-2">Net<br>Salary</th>
+                                    <th class="py-3 px-2 text-left">Remarks</th>
+                                </tr>
+                            </thead>
+                            <tbody id="cpf-body" class="divide-y divide-slate-200">
+                                <!-- Populated by JS -->
+                            </tbody>
+                            <tfoot id="cpf-footer" class="bg-slate-50 font-bold border-t-2 border-slate-300">
+                                <!-- Totals populated by JS -->
+                            </tfoot>
+                        </table>
+                    </div>
+
+                    <!-- Print Signatures -->
+                    <div class="print-only mt-16 px-8 flex justify-between text-sm font-bold">
+                        <div>Signature of Preparing Authority</div>
+                        <div>Signature of HOI / TIC with Seal</div>
+                    </div>
+                </div>
+            </section>
+
         </div>
-    </div>
-</div>
+    </main>
 
-<script>
-    const units = ['', 'First', 'Second', 'Third', 'Fourth', 'Fifth', 'Sixth', 'Seventh', 'Eighth', 'Ninth', 'Tenth', 'Eleventh', 'Twelfth', 'Thirteenth', 'Fourteenth', 'Fifteenth', 'Sixteenth', 'Seventeenth', 'Eighteenth', 'Nineteenth'];
-    const standardNumbers = ['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeteen', 'Eighteen', 'Nineteen'];
-    const tens = ['', '', 'Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety'];
-    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-
-    // Load saved tracking serial number or fallback safely to starting setup
-    window.addEventListener('DOMContentLoaded', (event) => {
-        let savedSl = localStorage.getItem('lastMatrixSlNo');
-        if (savedSl) {
-            document.getElementById('inputSlNo').value = savedSl;
-        } else {
-            document.getElementById('inputSlNo').value = "20";
-        }
-        updateCert();
-    });
-
-    // Automatically trigger native layout spool, bump count, and sync state engine
-    function printAndIncrement() {
-        window.print();
+    <script>
+        // --- Data Definitions ---
         
-        let currentSlInput = document.getElementById('inputSlNo');
-        let currentSl = parseInt(currentSlInput.value);
-        
-        if (!isNaN(currentSl)) {
-            let nextSl = currentSl + 1;
-            currentSlInput.value = nextSl;
-            localStorage.setItem('lastMatrixSlNo', nextSl);
-            updateCert();
-        }
-    }
+        // As requested: Existing teachers (excluding Sailen Kr. Barui) + 3 New Santali Medium Teachers
+        const teachers = [
+            { id: 1, name: "BHARATI DEY", dob: "12-Jul-1973", doj: "19-Oct-2004", qual: "B.A.(GEO)", medium: "Normal Section", acc: "33887766551", ifsc: "SBIN0012397", aadhaar: "1234-5678-9012" },
+            { id: 2, name: "RINKU BHUIN", dob: "01-Mar-1980", doj: "19-Oct-2004", qual: "B.A.(Beng)", medium: "Normal Section", acc: "33887766552", ifsc: "SBIN0012397", aadhaar: "2345-6789-0123" },
+            { id: 3, name: "BISWARUP DEY", dob: "12-Apr-1987", doj: "17-Dec-2008", qual: "B.A.(Eng)", medium: "Normal Section", acc: "33887766553", ifsc: "SBIN0012397", aadhaar: "3456-7890-1234" },
+            { id: 4, name: "DOLI MONDAL", dob: "17-Jan-1975", doj: "03-Jan-2007", qual: "B.Sc.(Pure Sc.)", medium: "Normal Section", acc: "33887766554", ifsc: "SBIN0012397", aadhaar: "4567-8901-2345" },
+            { id: 5, name: "SANTALI TEACHER 1", dob: "05-May-1992", doj: "01-Aug-2026", qual: "B.A.(Santali)", medium: "Santali Medium", acc: "44998877661", ifsc: "SBIN0012397", aadhaar: "9876-5432-1098" },
+            { id: 6, name: "SANTALI TEACHER 2", dob: "15-Aug-1994", doj: "01-Aug-2026", qual: "M.A.(Santali)", medium: "Santali Medium", acc: "44998877662", ifsc: "SBIN0012397", aadhaar: "8765-4321-0987" },
+            { id: 7, name: "SANTALI TEACHER 3", dob: "22-Nov-1995", doj: "01-Aug-2026", qual: "B.A.(Santali)", medium: "Santali Medium", acc: "44998877663", ifsc: "SBIN0012397", aadhaar: "7654-3210-9876" }
+        ];
 
-    function convertDayToWords(day) {
-        let d = parseInt(day);
-        if (d === 21) return "Twenty-first";
-        if (d === 22) return "Twenty-second";
-        if (d === 23) return "Twenty-third";
-        if (d === 31) return "Thirty-first";
-        if (d < 20) return units[d];
-        return tens[Math.floor(d / 10)] + (d % 10 !== 0 ? "-" + units[d % 10].toLowerCase() : "");
-    }
+        // Fixed Salary Structure
+        const salaryStructure = {
+            bank: "SBI TALDANGRA",
+            gross: 15523,
+            ptax: 130,
+            epf: 1800,
+            net: 13593
+        };
 
-    function convertYearToWords(year) {
-        let y = parseInt(year);
-        if (y === 2000) return "Two Thousand";
-        if (y > 2000 && y < 2010) return "Two Thousand " + ["One","Two","Three","Four","Five","Six","Seven","Eight","Nine"][y-2001];
-        
-        let part1 = Math.floor(y / 100);
-        let part2 = y % 100;
-        
-        let p2Words = "";
-        if (part2 === 0) {
-            p2Words = "";
-        } else if (part2 < 20) {
-            p2Words = standardNumbers[part2];
-        } else {
-            p2Words = tens[Math.floor(part2 / 10)] + (part2 % 10 !== 0 ? "-" + standardNumbers[part2 % 10].toLowerCase() : "");
-        }
-        
-        if (part1 === 20) return "Two Thousand" + (p2Words ? " " + p2Words : "");
-        return "Nineteen Hundred" + (p2Words ? " " + p2Words : "");
-    }
+        // --- Initialization & Setup ---
+        let baseDate = new Date(2026, 8); // Default to Sept 2026 (Month index 8)
+        let cycles = [];
 
-    function computeDateInWords(dateStr) {
-        try {
-            if(!dateStr) return "";
-            let parts = dateStr.split('-');
-            if(parts.length !== 3) return dateStr;
+        document.addEventListener('DOMContentLoaded', () => {
+            // Set initial month input value
+            const monthInput = document.getElementById('start-month');
+            const now = new Date();
+            // Default to current year and month if not defined
+            monthInput.value = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
             
-            let dayWord = convertDayToWords(parts[2]);
-            let monthWord = months[parseInt(parts[1]) - 1];
-            let yearWord = convertYearToWords(parts[0]);
+            updateCycles();
             
-            return `${dayWord} day of ${monthWord} ${yearWord}`;
-        } catch(e) { return dateStr; }
-    }
+            // Populate Views
+            renderDashboard();
+            renderDatabase();
+            renderReportM();
+            renderFormatCPF();
+        });
 
-    function getTodayFormatted() {
-        let today = new Date();
-        let dd = String(today.getDate()).padStart(2, '0');
-        let mm = String(today.getMonth() + 1).padStart(2, '0');
-        let yyyy = today.getFullYear();
-        return `${dd}-${mm}-${yyyy}`;
-    }
-
-    function toggleTrackView() {
-        let mode = document.getElementById('inputTrackMode').value;
-        
-        // Certificate Output Elements
-        let certMpRow = document.getElementById('certRowMP');
-        let certHsRow = document.getElementById('certRowHS');
-        let certMpMarksRow = document.getElementById('certRowMPMarks');
-        let certHsMarksRow = document.getElementById('certRowHSMarks');
-        let certMpSegment = document.getElementById('certTrackSegment');
-        let certHsSegment = document.getElementById('certHSSegment');
-        
-        // Counterfoil Input Panels
-        let panelMpRow = document.getElementById('panelMPRow');
-        let panelHsRow = document.getElementById('panelHSRow');
-        let panelStreamRow = document.getElementById('panelStreamRow');
-        
-        if (mode === "HS Only") {
-            certMpRow.style.display = 'none';
-            certHsRow.style.display = 'table-row';
-            certMpMarksRow.style.display = 'none';
-            certHsMarksRow.style.display = 'block';
-            certMpSegment.style.display = 'none';
-            certHsSegment.style.display = 'inline';
+        // --- Tab Switching Logic ---
+        function switchTab(tabId) {
+            // Update UI
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('bg-brand-primary', 'text-white');
+                btn.classList.add('hover:bg-brand-800', 'hover:text-white', 'text-slate-300');
+            });
             
-            panelMpRow.style.display = 'none';
-            panelHsRow.style.display = 'flex';
-            panelStreamRow.style.display = 'flex';
-        } else if (mode === "MP Only") {
-            certMpRow.style.display = 'table-row';
-            certHsRow.style.display = 'none';
-            certMpMarksRow.style.display = 'block';
-            certHsMarksRow.style.display = 'none';
-            certMpSegment.style.display = 'inline';
-            certHsSegment.style.display = 'none';
+            document.getElementById('tab-' + tabId).classList.add('active');
+            const activeBtn = document.getElementById('nav-' + tabId);
+            if(activeBtn) {
+                activeBtn.classList.remove('hover:bg-brand-800', 'hover:text-white', 'text-slate-300');
+                activeBtn.classList.add('bg-brand-primary', 'text-white');
+            }
+
+            // Update Header Title based on tab
+            const titles = {
+                'dashboard': 'Dashboard Overview',
+                'database': 'Master Database',
+                'report-m': 'Report (M) - Monthly Return',
+                'format-cpf': 'FORMAT (CPF) - Salary Statement'
+            };
+            document.getElementById('header-title').innerText = titles[tabId];
+        }
+
+        // --- STREAMING_CHUNK:JavaScript - Date handling and Cycle Generation ---
+        function formatDate(date) {
+            const dd = String(date.getDate()).padStart(2, '0');
+            const mm = String(date.getMonth() + 1).padStart(2, '0');
+            const yyyy = date.getFullYear();
+            return `${dd}/${mm}/${yyyy}`;
+        }
+
+        function handleCycleChange() {
+            const monthVal = document.getElementById('start-month').value;
+            if (monthVal) {
+                const parts = monthVal.split('-');
+                baseDate = new Date(parts[0], parseInt(parts[1]) - 1);
+                updateCycles();
+                renderReportM();
+                renderFormatCPF();
+            }
+        }
+
+        function updateCycles() {
+            cycles = [];
+            const year = baseDate.getFullYear();
+            const month = baseDate.getMonth();
+
+            // Generate 4 consecutive months
+            for (let i = 0; i < 4; i++) {
+                // 11th of current month
+                const start = new Date(year, month + i, 11);
+                // 10th of NEXT month
+                const end = new Date(year, month + i + 1, 10);
+                
+                cycles.push({
+                    start: start,
+                    end: end,
+                    label: `${formatDate(start)} to ${formatDate(end)}`,
+                    monthName: end.toLocaleString('default', { month: 'short', year: 'numeric' })
+                });
+            }
+
+            // Update Dropdowns
+            const selects = ['report-m-cycle-select', 'cpf-cycle-select'];
+            selects.forEach(selId => {
+                const sel = document.getElementById(selId);
+                const currentIdx = sel.selectedIndex >= 0 ? sel.selectedIndex : 0;
+                sel.innerHTML = '';
+                cycles.forEach((cycle, index) => {
+                    const opt = document.createElement('option');
+                    opt.value = index;
+                    opt.textContent = `${cycle.monthName} (${cycle.label})`;
+                    sel.appendChild(opt);
+                });
+                sel.selectedIndex = currentIdx; // Keep selected index if possible
+            });
+        }
+
+        // --- STREAMING_CHUNK:JavaScript - Rendering Functions ---
+
+        function renderDashboard() {
+            document.getElementById('dash-total-teachers').innerText = teachers.length;
+            const totalNet = teachers.length * salaryStructure.net;
+            const totalEpf = teachers.length * salaryStructure.epf;
+            document.getElementById('dash-total-net').innerText = `₹${totalNet.toLocaleString('en-IN')}`;
+            document.getElementById('dash-total-epf').innerText = `₹${totalEpf.toLocaleString('en-IN')}`;
+        }
+
+        function renderDatabase() {
+            const tbody = document.getElementById('db-table-body');
+            tbody.innerHTML = '';
             
-            panelMpRow.style.display = 'flex';
-            panelHsRow.style.display = 'none';
-            panelStreamRow.style.display = 'none'; // Stream not applicable to MP
-        } else {
-            // Dual Track Mode
-            certMpRow.style.display = 'table-row';
-            certHsRow.style.display = 'table-row';
-            certMpMarksRow.style.display = 'block';
-            certHsMarksRow.style.display = 'block';
-            certMpSegment.style.display = 'inline';
-            certHsSegment.style.display = 'inline';
+            teachers.forEach(t => {
+                const mediumBadge = t.medium === 'Santali Medium' 
+                    ? '<span class="px-2 py-1 rounded bg-amber-100 text-amber-800 text-xs font-semibold">Santali</span>'
+                    : '<span class="px-2 py-1 rounded bg-slate-100 text-slate-800 text-xs font-semibold">Normal</span>';
+
+                tbody.innerHTML += `
+                    <tr class="hover:bg-slate-50">
+                        <td class="px-4 py-3 text-center text-slate-500 font-medium">${t.id}</td>
+                        <td class="px-4 py-3 font-semibold text-slate-900">${t.name}</td>
+                        <td class="px-4 py-3 text-slate-600">${t.dob}</td>
+                        <td class="px-4 py-3 text-slate-600">${t.doj}</td>
+                        <td class="px-4 py-3 text-slate-600">${t.qual}</td>
+                        <td class="px-4 py-3">${mediumBadge}</td>
+                        <td class="px-4 py-3 text-slate-600 font-mono text-xs">${t.acc}</td>
+                        <td class="px-4 py-3 text-slate-600 font-mono text-xs">${t.ifsc}</td>
+                        <td class="px-4 py-3 text-slate-600 font-mono text-xs">${t.aadhaar}</td>
+                    </tr>
+                `;
+            });
+        }
+
+        function renderReportM() {
+            const selIdx = document.getElementById('report-m-cycle-select').selectedIndex;
+            if(selIdx === -1 || cycles.length === 0) return;
+            const cycle = cycles[selIdx];
             
-            panelMpRow.style.display = 'flex';
-            panelHsRow.style.display = 'flex';
-            panelStreamRow.style.display = 'flex';
+            document.getElementById('report-m-cycle-display').innerText = cycle.label;
+            const tbody = document.getElementById('report-m-body');
+            tbody.innerHTML = '';
+
+            const renderGroup = (groupName, teachersList) => {
+                if(teachersList.length === 0) return;
+                
+                // Group Header Row
+                tbody.innerHTML += `
+                    <tr class="print-table-group-header">
+                        <td colspan="10" class="px-4 py-2 bg-slate-200 text-slate-800 font-bold uppercase text-xs tracking-wider">
+                            ${groupName}
+                        </td>
+                    </tr>
+                `;
+                
+                // Teacher Rows
+                teachersList.forEach(t => {
+                    tbody.innerHTML += `
+                        <tr class="hover:bg-slate-50">
+                            <td class="text-center py-2 px-2 font-medium">${t.id}</td>
+                            <td class="py-2 px-2 font-semibold">${t.name}</td>
+                            <td class="py-2 px-2 text-xs">${t.qual}<br><span class="text-slate-500">DOJ: ${t.doj}</span></td>
+                            <td class="text-center py-2 px-2 font-semibold text-brand-primary">22</td>
+                            <td class="text-center py-2 px-2">8</td>
+                            <td class="text-center py-2 px-2">0</td>
+                            <td class="text-center py-2 px-2">0</td>
+                            <td class="py-2 px-2 text-slate-400 italic text-xs">Nil</td>
+                            <td class="py-2 px-2 border-b border-slate-300"></td> <!-- Signature space -->
+                            <td class="py-2 px-2 font-mono text-xs">${t.aadhaar}</td>
+                        </tr>
+                    `;
+                });
+            };
+
+            const normalTeachers = teachers.filter(t => t.medium === 'Normal Section');
+            const santaliTeachers = teachers.filter(t => t.medium === 'Santali Medium');
+
+            renderGroup('Normal Section', normalTeachers);
+            renderGroup('Santali Medium', santaliTeachers);
         }
-    }
 
-    function updateCert() {
-        let memoVal = document.getElementById('inputMemo').value;
-        let memoDateVal = document.getElementById('inputMemoDate').value;
-        let spDibRow = document.getElementById('certSpDibRow');
+        function renderFormatCPF() {
+            const selIdx = document.getElementById('cpf-cycle-select').selectedIndex;
+            if(selIdx === -1 || cycles.length === 0) return;
+            const cycle = cycles[selIdx];
+            
+            document.getElementById('cpf-cycle-display').innerText = cycle.label;
+            const tbody = document.getElementById('cpf-body');
+            const tfoot = document.getElementById('cpf-footer');
+            tbody.innerHTML = '';
+            
+            let totalGross = 0;
+            let totalPtax = 0;
+            let totalEpf = 0;
+            let totalNet = 0;
 
-        if (!memoVal || memoVal.trim().toUpperCase() === 'NA' || memoVal.trim() === '') {
-            spDibRow.style.display = 'none';
-        } else {
-            spDibRow.style.display = 'grid';
-            document.getElementById('certMemo').innerText = memoVal;
-            document.getElementById('certMemoDate').innerText = memoDateVal;
+            teachers.forEach(t => {
+                totalGross += salaryStructure.gross;
+                totalPtax += salaryStructure.ptax;
+                totalEpf += salaryStructure.epf;
+                totalNet += salaryStructure.net;
+
+                tbody.innerHTML += `
+                    <tr class="hover:bg-slate-50 text-center">
+                        <td class="py-2 px-2 font-medium">${t.id}</td>
+                        <td class="py-2 px-2 text-left font-semibold">${t.name}<br><span class="text-xs font-normal text-slate-500">${t.medium}</span></td>
+                        <td class="py-2 px-2 text-left text-xs">${salaryStructure.bank}</td>
+                        <td class="py-2 px-2 font-mono text-xs">${t.acc}</td>
+                        <td class="py-2 px-2 font-mono text-xs">${t.ifsc}</td>
+                        <td class="py-2 px-2">0</td>
+                        <td class="py-2 px-2 text-right">₹${salaryStructure.gross}</td>
+                        <td class="py-2 px-2 text-right">₹${salaryStructure.ptax}</td>
+                        <td class="py-2 px-2 text-right">₹${salaryStructure.epf}</td>
+                        <td class="py-2 px-2 text-right font-bold text-emerald-700">₹${salaryStructure.net}</td>
+                        <td class="py-2 px-2 text-left text-xs italic font-medium">Paid via DD Mode</td>
+                    </tr>
+                `;
+            });
+
+            // Footer Totals
+            tfoot.innerHTML = `
+                <tr class="text-center bg-slate-100">
+                    <td colspan="6" class="py-3 px-2 text-right uppercase tracking-wide">Grand Total:</td>
+                    <td class="py-3 px-2 text-right">₹${totalGross.toLocaleString('en-IN')}</td>
+                    <td class="py-3 px-2 text-right">₹${totalPtax.toLocaleString('en-IN')}</td>
+                    <td class="py-3 px-2 text-right">₹${totalEpf.toLocaleString('en-IN')}</td>
+                    <td class="py-3 px-2 text-right font-bold text-emerald-700 text-base">₹${totalNet.toLocaleString('en-IN')}</td>
+                    <td></td>
+                </tr>
+            `;
         }
-        
-        let currentYear = new Date().getFullYear();
-        let databaseSl = document.getElementById('inputSlNo').value;
-        document.getElementById('certSlNo').innerText = `TFHS/${currentYear}/${databaseSl}`;
-        
-        let liveToday = getTodayFormatted();
-        document.getElementById('certTodayDate').innerText = liveToday;
-        document.getElementById("today").textContent = liveToday;
-        
-        document.getElementById('certName').innerText = document.getElementById('inputName').value.toUpperCase();
-        document.getElementById('certFather').innerText = document.getElementById('inputFather').value.toUpperCase();
-        document.getElementById('certVillage').innerText = document.getElementById('inputVillage').value.toUpperCase();
-        document.getElementById('certPO').innerText = document.getElementById('inputPO').value.toUpperCase();
-        document.getElementById('certPS').innerText = document.getElementById('inputPS').value.toUpperCase();
-        document.getElementById('certDist').innerText = document.getElementById('inputDist').value.toUpperCase();
-        document.getElementById('certPIN').innerText = document.getElementById('inputPIN').value;
-        let bsidVal = document.getElementById('inputBSID').value;
-        let bsidRow = document.getElementById('certBSIDRow');
-        if (!bsidVal || bsidVal.trim().toUpperCase() === 'NA' || bsidVal.trim() === '') {
-            bsidRow.style.display = 'none';
-        } else {
-            bsidRow.style.display = 'block';
-            document.getElementById('certBSID').innerText = bsidVal;
-        }
-        
-        let cat = document.getElementById('inputCategory').value;
-        document.getElementById('certCatText1').innerText = cat;
-        document.getElementById('certCatText2').innerText = cat;
-        
-        document.getElementById('certStreamTxt').innerText = document.getElementById('inputStream').value;
-        document.getElementById('certMPYearText').innerText = document.getElementById('inputMPYear').value;
-        document.getElementById('certHSYearText').innerText = document.getElementById('inputHSYear').value;
-        
-        document.getElementById('certMarksMP').innerText = document.getElementById('inputMPScore').value;
-        document.getElementById('certMarksHS').innerText = document.getElementById('inputHSScore').value;
-        
-        let rawDobValue = document.getElementById('inputDOB').value;
-        if(rawDobValue) {
-            let dobParts = rawDobValue.split('-');
-            let displayDob = `${dobParts[2]}-${dobParts[1]}-${dobParts[0]}`;
-            document.getElementById('certDOB').innerText = displayDob;
-            document.getElementById('certDOBWords').innerText = computeDateInWords(rawDobValue);
-        } else {
-            document.getElementById('certDOB').innerText = "";
-            document.getElementById('certDOBWords').innerText = "";
-        }
-        
-        document.getElementById('certLeavingDateText').innerText = document.getElementById('inputLeaving').value;
-        
-        document.getElementById('certClassMP').innerText = "Class-" + document.getElementById('inputClassMP').value;
-        document.getElementById('certAdmDateMP').innerText = document.getElementById('inputAdmDateMP').value;
-        document.getElementById('certRegSlMP').innerText = document.getElementById('inputRegSlMP').value;
-        
-        document.getElementById('certClassHS').innerText = "Class-" + document.getElementById('inputClassHS').value;
-        document.getElementById('certAdmDateHS').innerText = document.getElementById('inputAdmDateHS').value;
-        document.getElementById('certRegSlHS').innerText = document.getElementById('inputRegSlHS').value;
-
-        let sexVal = document.getElementById('inputSex').value;
-        let subParent = sexVal === "Female" ? "Daughter" : "Son";
-        let subPr1 = sexVal === "Female" ? "her" : "his";
-        let subPr1Cap = sexVal === "Female" ? "Her" : "His";
-        let subPr2 = sexVal === "Female" ? "she" : "he";
-        let subPr3 = sexVal === "Female" ? "her" : "him";
-
-        document.getElementById('lblParentage').innerText = subParent;
-        document.getElementById('lblPossessive1').innerText = subPr1;
-        document.getElementById('lblPossessive2').innerText = subPr1;
-        document.getElementById('lblPossessive3').innerText = subPr1Cap;
-        document.getElementById('lblSubject').innerText = subPr2;
-        document.getElementById('lblSubject2').innerText = subPr2;
-        document.getElementById('lblObjective').innerText = subPr3;
-
-        let objLabels = document.getElementsByClassName('lblObjectiveText');
-        for(let lbl of objLabels) {
-            lbl.innerText = subPr3;
-        }
-    }
-
-    toggleTrackView();
-    updateCert();
-</script>
+    </script>
 </body>
 </html>
