@@ -63,6 +63,46 @@ select.cell-select{border:0;background:#fff7ed;padding:5px}
   th,td{font-size:8.2pt;padding:4px 5px;border:1px solid #000}.report-title h2{font-size:13pt}
   .sig-col{min-width:145px;width:145px}.footer-sign{padding-top:45px}
 }
+
+.medium-controls{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.medium-controls label{font-size:12px;font-weight:700;color:#334155}
+.medium-controls input,.medium-controls select{height:36px;border:1px solid #cbd5e1;border-radius:7px;padding:0 10px;background:#fff}
+.medium-pages{display:grid;grid-template-columns:1fr;gap:18px}
+.a4-page{
+  width:210mm; min-height:297mm; background:#fff; margin:0 auto;
+  padding:10mm 10mm 9mm; position:relative; border:1px solid #cbd5e1;
+  box-shadow:0 2px 8px rgba(15,23,42,.08); color:#000;
+}
+.a4-page .corner-info{position:absolute;top:7mm;right:9mm;text-align:right;font-size:9.5pt;line-height:1.25;font-weight:800}
+.a4-page .qr{position:absolute;top:24mm;right:9mm;width:31mm;height:31mm;object-fit:contain;image-rendering:auto}
+.a4-page .page-heading{text-align:center;padding-top:2mm;padding-right:34mm}
+.a4-page .page-heading h2{font-size:15pt;margin:0 0 3mm;text-decoration:underline}
+.a4-page .page-heading p{font-size:10pt;margin:1.5mm 0}
+.a4-page .meta-line{display:flex;justify-content:space-between;gap:12mm;margin:5mm 0 4mm;font-size:9.5pt}
+.a4-page table{font-size:9pt;color:#000}
+.a4-page th,.a4-page td{border:1px solid #000;padding:5px 5px;color:#000}
+.a4-page th{background:#fff}
+.a4-page .days-input{
+  width:24mm;border:1px solid #000;background:#fff;color:#000;
+  text-align:center;font-weight:700;padding:4px;
+}
+.a4-page .report-footer{position:absolute;left:10mm;right:10mm;bottom:10mm;display:flex;justify-content:space-between;align-items:flex-end;font-size:9pt}
+.a4-page .report-footer .seal{margin-top:18mm}
+.a4-page .page-no{position:absolute;bottom:5mm;left:0;right:0;text-align:center;font-size:8.5pt}
+.medium-summary{margin-top:6mm;font-size:9.5pt;border:1px solid #000;padding:4mm}
+.medium-summary strong{font-size:10pt}
+@media print{
+  .medium-pages{display:block}
+  .a4-page{
+    width:210mm; height:297mm; min-height:297mm; margin:0;
+    border:0; box-shadow:none; break-after:page; page-break-after:always;
+    padding:10mm 10mm 9mm;
+  }
+  .a4-page:last-child{break-after:auto;page-break-after:auto}
+  .a4-page .days-input{border:1px solid #000;background:#fff}
+  @page{size:A4 portrait;margin:0}
+}
+
 </style>
 </head>
 <body>
@@ -78,6 +118,7 @@ select.cell-select{border:0;background:#fff7ed;padding:5px}
       <button data-tab="database">Employee Database</button>
       <button data-tab="report">Monthly Return</button>
       <button data-tab="cpf">Salary / CPF</button>
+      <button data-tab="mediumReport">Medium-wise 2+2 Report</button>
     </div>
   </aside>
 
@@ -168,6 +209,31 @@ select.cell-select{border:0;background:#fff7ed;padding:5px}
           </div>
         </div>
       </section>
+
+      
+<section class="tab" id="mediumReport">
+  <div class="panel no-print">
+    <div class="panel-head">
+      <div>
+        <h3>Medium-wise 2+2 = 4 Report</h3>
+        <div class="muted">Four separate A4 pages: 2 Bengali Medium + 2 Santali Medium. No. of Days is manually entered.</div>
+      </div>
+      <div class="medium-controls">
+        <label>Month</label>
+        <input id="mediumMonth" type="month" value="2026-10">
+        <label>Bengali Days</label>
+        <input id="bengaliDays" type="number" min="0" value="0">
+        <label>Santali Days</label>
+        <input id="santaliDays" type="number" min="0" value="0">
+        <button class="primary" id="printMediumBtn">Print 4 A4 Pages</button>
+      </div>
+    </div>
+    <div class="notice">
+      The original uploaded QR image is embedded directly in all four pages so the printed QR remains the same scanable image. Medium name and place are shown in the corner of every page. Days remain black and editable.
+    </div>
+  </div>
+  <div id="mediumPages" class="medium-pages"></div>
+</section>
 
       <section class="tab" id="cpf">
         <div class="panel">
@@ -333,7 +399,110 @@ function renderDashboard(){
   document.getElementById('kNet').textContent=money(net*employees.length);
 }
 
-function renderAll(){renderDatabase();renderReport();renderCPF();renderDashboard()}
+
+const exactQR = "data:image/png;base64,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XAEAAKTkCgAAICVXAAAAKbkCAABIfYxUvfdWHjvnND7Wq3cIvUV7jYy0V++8bV7TzSdr8w7pNXJOH6C4Q95z9xb1TogL/7fqXYUHFO21eemLHjAE3ysAAICUXAEAAKTkCgAAICVXAAAAKbkCAABIyRUAAEBKrgAAAFJyBQAAkJIrAACAlFwBAACk5AoAACAlVwAAAKlz7+1s7pzG1op6h1BUHOnmvvUqjnSkb0UjQxg5gCPbstcDNlKvByx97xDe01qvkb695521eU03e8DJKnrAfvO9AgAASMkVAABASq4AAABScgUAAJCSKwAAgJRcAQAApOQKAAAgJVcAAAApuQIAAEjJFQAAQEquAAAAUnIFAACQOvfegarnfH/RXiPzNmJksYrT29u3B6zpyIS8p+iIB4y0OITevm1+y/Ru8vccmc1XzUhrm21erN6iRe85zr5XAAAAKbkCAABIyRUAAEBKrgAAAFJyBQAAkJIrAACAlFwBAACk5AoAACAlVwAAACm5AgAASMkVAABASq4AAABSH9Md+D733sbWzjlri44ojrQ4hN7p7Z23kaUfMbLfNp+skf02crKKin3bPG9F7zn1RSNHZvNZKBrZIZt37+aim9+ARSPT63sFAACQkisAAICUXAEAAKTkCgAAICVXAAAAKbkCAABIyRUAAEBKrgAAAFJyBQAAkJIrAACAlFwBAACk5AoAACD10dvcOafy2L23t25FsW9FxSFsnpCRokW9fds80qLejTTS2ojNI31A0ZG+bbZ5sUb09u0B07v5RiraPIQH/HLY/K4v8r0CAABIyRUAAEBKrgAAAFJyBQAAkJIrAACAlFwBAACk5AoAACAlVwAAACm5AgAASMkVAABASq4AAABScgUAAJA6997pPvyjc07lsd4hFIu+R3F6e+ett+jIEIre07eR1jbbPNLN+63X5jtE0a8Vfc/lsNnmV9uIzRPSe2R8rwAAAFJyBQAAkJIrAACAlFwBAACk5AoAACAlVwAAACm5AgAASMkVAABASq4AAABScgUAAJCSKwAAgJRcAQAApM69d7oPu5xzKo/1zluxaNFI3x5QdMR7RtrrPUdmpLVeI7t387xtXvrNE1L0nk1e9IDFGtnkRe8pWuR7BQAAkJIrAACAlFwBAACk5AoAACAlVwAAACm5AgAASMkVAABASq4AAABScgUAAJCSKwAAgJRcAQAApOQKAAAgde69nc2dU3msWLTYWpGR/taim/UufdEDdm9R7357z2JtnpAid8jXbL4cija/AXttPs6b75DNm/wBi7V56X2vAAAAUnIFAACQkisAAICUXAEAAKTkCgAAICVXAAAAKbkCAABIyRUAAEBKrgAAAFJyBQAAkJIrAACAlFwBAACkPqY78G/uvd9f9JxTeazYt97Weo0ULdo8b0W9fXvAhGy2ed6KS1+0+eJ6wCZ/zxB6W9u8kXonpOgBG6l3eh+wkTYvVi/fKwAAgJRcAQAApOQKAAAgJVcAAAApuQIAAEjJFQAAQEquAAAAUnIFAACQkisAAICUXAEAAKTkCgAAICVXAAAAqY/e5u69vQ02OudUHisOobe1omLRopG+PWBCRka6We8q9BYdWYXN27K3aJG792utbb5DHnCyijavQtHIAew1cjkUWxs5zpu3pe8VAABASq4AAABScgUAAJCSKwAAgJRcAQAApOQKAAAgJVcAAAApuQIAAEjJFQAAQEquAAAAUnIFAACQkisAAIDUufcOVD3n+4tuHmlv33qnV99+a9FeDxjCZiO79wFFez3gRtp8Tl3RX7P5V80DfocUPWC/bT6ARb5XAAAAKbkCAABIyRUAAEBKrgAAAFJyBQAAkJIrAACAlFwBAACk5AoAACAlVwAAACm5AgAASMkVAABASq4AAABS597b2dw5lcdGij5Acd6swie989ZbtFfv0r9nTR9wFjZv8pFVGDFyADfPmzvkazYv/QPuN0v/W/leAQAApOQKAAAgJVcAAAApuQIAAEjJFQAAQEquAAAAUnIFAACQkisAAICUXAEAAKTkCgAAICVXAAAAKbkCAABIffQ2d++tPHbOaWytqLe1ouJI36N3FXqn9z07ZOQA8knvbdlbtKh3I42MdPNZ2HxbFm2+VN+ze3uLbn4vPOBHY6+R+833CgAAICVXAAAAKbkCAABIyRUAAEBKrgAAAFJyBQAAkJIrAACAlFwBAACk5AoAACAlVwAAACm5AgAASMkVAABA6tx7O5s7p/LYSNH3KE5v77wp+ryim71nFRT9WlFvma/ZPG8jO2Rkv/V6zyq8x+b95nsFAACQkisAAICUXAEAAKTkCgAAICVXAAAAKbkCAABIyRUAAEBKrgAAAFJyBQAAkJIrAACAlFwBAACk5AoAACB17r3TffhH55zKY8Uh9LbWq9i3ot4hjMxb74QUPWDeit7Tt5HWijZPb5EhfPKekzVSdPPSFz3g1TbCydpQtMj3CgAAICVXAAAAKbkCAABIyRUAAEBKrgAAAFJyBQAAkJIrAACAlFwBAACk5AoAACAlVwAAACm5AgAASMkVAABA6qO3uXNOY2v33sbWehVH2juEkQkpFu1d+qKRCRlZ+pHpLRqZkBG9Z6F33kZae4DNI33AVfOAN+DmV9vIVVPkZH1N77yNjNT3CgAAICVXAAAAKbkCAABIyRUAAEBKrgAAAFJyBQAAkJIrAACAlFwBAACk5AoAACAlVwAAACm5AgAASMkVAABA6mO6A/9V997pLvyjc850F1Kbp7eouAq9Iy221rtDHrBYRZtP1sjSFz1gv43M2wNO1sjS9969vauw+Q4p2rymvUU323zh+14BAACk5AoAACAlVwAAACm5AgAASMkVAABASq4AAABScgUAAJCSKwAAgJRcAQAApOQKAAAgJVcAAAApuQIAAEide+90H77JOWe6C6niYo2MdHPfevUemeKEjBR9gN5t+YClH/GAG8n99ol5+xoT8okJ+WRkQnrfMr5XAAAAKbkCAABIyRUAAEBKrgAAAFJyBQAAkJIrAACAlFwBAACk5AoAACAlVwAAACm5AgAASMkVAABASq4AAABS59473YfUOef7ixbnbaRvRb1DsJE+6Z2Q3lWwLb9mZIdsPoCb796iB5yFos0jHbH5iu61+eJ6QNERm0fqewUAAJCSKwAAgJRcAQAApOQKAAAgJVcAAAApuQIAAEjJFQAAQEquAAAAUnIFAACQkisAAICUXAEAAKTkCgAAIPXR29w5p/LYvbextaJi0aLekfYWHWltRO8qbF6szUfmARvpPUYurpGNNLIte0f6njfg5vdpb9FeI6uwed4e8BLvbW3kGvS9AgAASMkVAABASq4AAABScgUAAJCSKwAAgJRcAQAApOQKAAAgJVcAAAApuQIAAEjJFQAAQEquAAAAUnIFAACQ+uht7t67trWic07lsWLfelvr1TuEXg8ounl6R/Zb0eYD2Ft0ZOlHjFyDmzd5b9/cIZ+M3CG9eotufrWNnIWRq+Y959T3CgAAICVXAAAAKbkCAABIyRUAAEBKrgAAAFJyBQAAkJIrAACAlFwBAACk5AoAACAlVwAAACm5AgAASMkV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HUJv0ZGN1Nu3kcUambcHLFavB5zTzXonZOQ4F7lDNhQd2W9FI5dD7xA2/2h8zwEs8r0CAABIyRUAAEBKrgAAAFJyBQAAkJIrAACAlFwBAACk5AoAACAlVwAAACm5AgAASMkVAABASq4AAABScgUAAJD6GKl67x2p22hkCOec7y/a6wFLX1Qcae+a9rb2nk3eu1i98zayQ0YmpNjaSNFeTtYnIxfX5vfp5h2y+SVu3jbwvQIAAEjJFQAAQEquAAAAUnIFAACQkisAAICUXAEAAKTkCgAAICVXAAAAKbkCAABIyRUAAEBKrgAAAFJyBQAAkProbe6c09vgf9299/tbK65Cb996l763b716p3fzKvQW3bymD7B5FTa/F3ov1V4PuMl7PWCxit4z0hEPuC03v099rwAAAFJyBQAAkJIrAACAlFwBAACk5AoAACAlVwAAACm5AgAASMkVAABASq4AAABScgUAAJCSKwAAgJRcAQAApD5Gqv7xxx8/f/4cKd3i169ff//993Qv/tG9t/LYOaextd6ivX0rtjait28jE1IsutnIfuudt819K+otuvnUF21ehd6bvGjzxbX5DnnAvPXa/M7a3LeimVzx8+fPv/76a6R0iz///HNzrgAAgG/mf1AAAEBKrgAAAFJyBQAAkJIrAACAlFwBAACk5AoAACAlVwAAACm5AgAASMkVAABASq4AAABScgUAAJD6mO7AvznnfH/Re+9/vejIvPUaWYWiB+yQogdspBG9i1VsrbhYI30r6t1vm4/M5pP1ntdu75HZfLJ6jczbA05Wr5ELv8j3CgAAICVXAAAAKbkCAABIyRUAAEBKrgAAAFJyBQAAkJIrAACAlFwBAACk5AoAACAlVwAAACm5AgAASMkVAABA6mO6A/z48ePHOafy2L33d/fk/xvp23smpPjY5gkpGtkhxcd6ixb1TkjvRtps80hHjvPmbdl7Th8wvUWbb/IRm1+UI2+ZzTvE9woAACAlVwAAACm5AgAASMkVAABASq4AAABScgUAAJCSKwAAgJRcAQAApOQKAAAgJVcAAAApuQIAAEjJFQAAQOpjugP0u/dOd+EfjfStWPScs7a1zUMo6u1bUW9rm3dI0QMmpNfmCeGTkR1SNLKRih7w+tj8otx84Y8U9b0CAABIyRUAAEBKrgAAAFJyBQAAkJIrAACAlFwBAACk5AoAACAlVwAAACm5AgAASMkVAABASq4AAABScgUAAJD6mO7Av7n3Tnfhm2we6TmnsbXiSItFe1srGmmtd4dsLlo0spE2797Nd8iIkcvhAUV7+9brPSMt2nyHjNxIm9f0AS/xIt8rAACAlFwBAACk5AoAACAlVwAAACm5AgAASMkVAABASq4AAABScgUAAJCSKwAAgJRcAQAApOQKAAAg9TFS9devX3/++edI6Ra/fv2a7gIAACxy7r2dzZ3T2NoDFKe3d95617Ro8xCKfds8byN96/WAHdKr93J4wO4d2SEPeGeNbKQHbMuiB+zeBwyh1+bpfcAB9D8oAAAgJVcAAAApuQIAAEjJFQAAQEquAAAAUnIFAACQkisAAICUXAEAAKTkCgAAICVXAAAAKbkCAABIyRUAAEDq3Hun+wAAAPy3+V4BAACk5AoAACAlVwAAACm5AgAASMkVAABASq4AAABScgUAAJCSKwAAgJRcAQAApOQKAAAgJVcAAAApuQIAAEjJFQAAQEquAAAAUnIFAACQkisAAICUXAEAAKTkCgAAICVXAAAAKbkCAABIyRUAAEBKrgAAAFJyBQAAkJIrAACAlFwBAACk/heBbHBiwR9hQgAAAABJRU5ErkJggg==";
+const mediumReportState = {
+  month: "2026-10",
+  bengaliDays: 0,
+  santaliDays: 0
+};
+
+function monthLabelFromValue(v){
+  const [y,m] = v.split("-").map(Number);
+  return new Date(y, m-1, 1).toLocaleString("en-IN", {month:"long", year:"numeric"});
+}
+
+function mediumPageHtml(medium, copyNo, pageNo, days){
+  const list = employees.filter(e => e.medium === medium);
+  const mediumName = medium === "Bengali Medium" ? "BENGALI MEDIUM" : "SANTALI MEDIUM";
+  const rows = list.map((e,i)=>`
+    <tr>
+      <td style="text-align:center">${i+1}</td>
+      <td><b>${e.name}</b></td>
+      <td style="text-align:center">${e.dob}</td>
+      <td>${e.qual}</td>
+      <td style="text-align:center">${e.doj}</td>
+      <td style="text-align:center"><input class="days-input" type="number" min="0" value="${days}" data-medium-days="${medium}"></td>
+    </tr>`).join("");
+
+  return `
+  <div class="a4-page" data-medium-page="${medium}" data-copy="${copyNo}">
+    <div class="corner-info">
+      ${mediumName}<br>
+      TALDANGRA FULMATI HIGH SCHOOL (H.S.)<br>
+      TALDANGRA, BANKURA
+    </div>
+    <img class="qr" src="${exactQR}" alt="QR Code">
+    <div class="page-heading">
+      <h2>MEDIUM-WISE PARA TEACHER REPORT</h2>
+      <p><b>${mediumName}</b></p>
+      <p>TALDANGRA FULMATI HIGH SCHOOL (H.S.)</p>
+    </div>
+    <div class="meta-line">
+      <div>Report Month: <b>${monthLabelFromValue(mediumReportState.month)}</b></div>
+      <div>Copy: <b>${copyNo} of 2</b></div>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th style="width:10mm">Sl.</th>
+          <th>Name of Para Teacher</th>
+          <th style="width:28mm">D.O.B.</th>
+          <th>Qualification</th>
+          <th style="width:28mm">Date of Joining</th>
+          <th style="width:35mm">No. of Days</th>
+        </tr>
+      </thead>
+      <tbody>${rows}</tbody>
+    </table>
+    <div class="medium-summary">
+      <b>Medium:</b> ${mediumName} &nbsp;&nbsp; | &nbsp;&nbsp;
+      <b>Place:</b> TALDANGRA, BANKURA &nbsp;&nbsp; | &nbsp;&nbsp;
+      <b>No. of Days:</b> ${days}
+    </div>
+    <div class="report-footer">
+      <div class="seal">School Seal</div>
+      <div style="text-align:center">Signature of Administrator / Headmaster / T.I.C.<br><br><b>PRABIR KUMAR DANGAR</b></div>
+    </div>
+    <div class="page-no">Page ${pageNo} of 4</div>
+  </div>`;
+}
+
+function renderMediumReport(){
+  const b = Math.max(0, Number(document.getElementById("bengaliDays").value || 0));
+  const s = Math.max(0, Number(document.getElementById("santaliDays").value || 0));
+  mediumReportState.month = document.getElementById("mediumMonth").value || "2026-10";
+  mediumReportState.bengaliDays = b;
+  mediumReportState.santaliDays = s;
+
+  document.getElementById("mediumPages").innerHTML =
+    mediumPageHtml("Bengali Medium",1,1,b) +
+    mediumPageHtml("Bengali Medium",2,2,b) +
+    mediumPageHtml("Santali Medium",1,3,s) +
+    mediumPageHtml("Santali Medium",2,4,s);
+
+  document.querySelectorAll("[data-medium-days]").forEach(inp => {
+    inp.addEventListener("input", e => {
+      const med = e.target.dataset.mediumDays;
+      const val = Math.max(0, Number(e.target.value || 0));
+      if(med === "Bengali Medium") document.getElementById("bengaliDays").value = val;
+      if(med === "Santali Medium") document.getElementById("santaliDays").value = val;
+      renderMediumReport();
+    });
+  });
+}
+
+["mediumMonth","bengaliDays","santaliDays"].forEach(id => {
+  document.getElementById(id).addEventListener("input", renderMediumReport);
+});
+document.getElementById("printMediumBtn").addEventListener("click", () => {
+  document.querySelectorAll(".tab").forEach(t => t.classList.remove("print-active"));
+  document.getElementById("mediumReport").classList.add("print-active");
+  renderMediumReport();
+  window.print();
+});
+
+function renderAll(){renderDatabase();renderReport();renderCPF();renderDashboard();renderMediumReport()}
 monthSel.addEventListener("change",renderAll);
 
 document.querySelectorAll(".nav button").forEach(btn=>btn.addEventListener("click",()=>{
@@ -341,7 +510,7 @@ document.querySelectorAll(".nav button").forEach(btn=>btn.addEventListener("clic
   btn.classList.add("active");
   document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
   document.getElementById(btn.dataset.tab).classList.add("active");
-  const names={dashboard:"Dashboard",database:"Employee Database",report:"Monthly Return",cpf:"Salary / CPF"};
+  const names={dashboard:"Dashboard",database:"Employee Database",report:"Monthly Return",cpf:"Salary / CPF",mediumReport:"Medium-wise 2+2 Report"};
   document.getElementById("pageTitle").textContent=names[btn.dataset.tab];
 }));
 
