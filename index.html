@@ -1,603 +1,304 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TFHS Para Teacher Dashboard</title>
-    
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Tailwind CSS via CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- FontAwesome for Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                    },
-                    colors: {
-                        brand: {
-                            900: '#0f172a',
-                            800: '#1e293b',
-                            primary: '#2563eb',
-                            secondary: '#3b82f6'
-                        }
-                    }
-                }
-            }
-        }
-    </script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TFHS Para Teacher Reports – Monthly Return &amp; Salary Statement (CPF)</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+<style>
+:root{
+  --navy:#14305e; --navy2:#0b1b3a; --gold:#b8892d; --paper:#f7f9fd; --head:#dfe7f3;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{font-family:"Segoe UI",Roboto,Arial,Helvetica,sans-serif;background:#e6eaf1;color:var(--navy2)}
 
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f1f5f9; /* slate-100 */
-        }
-        
-        /* Tab Navigation */
-        .tab-content { display: none; }
-        .tab-content.active { display: block; animation: fadeIn 0.3s ease-in-out; }
+/* ---------- Screen toolbar ---------- */
+.toolbar{position:sticky;top:0;z-index:10;background:#fff;border-bottom:1px solid #cfd6e4;
+  padding:10px 16px;display:flex;flex-wrap:wrap;gap:14px;align-items:center;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.toolbar h1{font-size:16px;margin:0;color:var(--navy);font-weight:700}
+.toolbar label{font-size:12px;font-weight:600;color:#475569;display:flex;flex-direction:column;gap:3px}
+.toolbar input{font:inherit;font-size:13px;padding:5px 8px;border:1px solid #b9c3d6;border-radius:6px}
+.toolbar button{font:inherit;font-size:13px;font-weight:600;padding:8px 16px;border:0;border-radius:6px;
+  background:var(--navy);color:#fff;cursor:pointer}
+.toolbar button:hover{background:#1d417f}
+.cyc{font-size:13px;font-weight:600;color:var(--navy);background:#eef3fb;border:1px solid #cfd9ec;padding:6px 10px;border-radius:6px}
+.jump{display:flex;gap:6px;flex-wrap:wrap}
+.jump a{font-size:11.5px;text-decoration:none;color:var(--navy);background:#f1f4f9;border:1px solid #cfd6e4;padding:4px 9px;border-radius:999px}
+.jump a:hover{background:#e3eaf7}
+#pages{padding:16px 0 30px;transform-origin:top center}
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(4px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+/* ---------- A4 landscape sheet ---------- */
+.sheet{position:relative;width:297mm;height:209.5mm;margin:0 auto 10mm;background:var(--paper);overflow:hidden;
+  box-shadow:0 4px 18px rgba(20,48,94,.22);break-after:page;page-break-after:always;
+  -webkit-print-color-adjust:exact;print-color-adjust:exact;
+  background-image:
+   url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='250' height='110'><text x='125' y='58' text-anchor='middle' font-family='Georgia,serif' font-size='10.5' letter-spacing='.6' fill='%2314305e' fill-opacity='0.075' transform='rotate(-24 125 55)'>TALDANGRA FULMATI HIGH SCHOOL (H.S.)</text></svg>"),
+   linear-gradient(180deg,#fbfcff 0%,#f1f5fb 100%);
+  background-size:250px 110px,100% 100%}
+/* Official border */
+.b1{position:absolute;inset:5mm;border:1.6mm solid var(--navy)}
+.b2{position:absolute;inset:7.9mm;border:.35mm solid var(--gold)}
+.b3{position:absolute;inset:9.1mm;border:.2mm solid var(--navy)}
+.corner{position:absolute;width:11mm;height:11mm;background:var(--navy);z-index:2}
+.corner::after{content:"";position:absolute;left:50%;top:50%;width:4.2mm;height:4.2mm;background:var(--gold);transform:translate(-50%,-50%) rotate(45deg);
+  box-shadow:0 0 0 .5mm var(--navy),0 0 0 .8mm var(--gold)}
+.c-tl{left:4.2mm;top:4.2mm}.c-tr{right:4.2mm;top:4.2mm}.c-bl{left:4.2mm;bottom:4.2mm}.c-br{right:4.2mm;bottom:4.2mm}
+.mid{position:absolute;width:3.4mm;height:3.4mm;background:var(--gold);transform:rotate(45deg);z-index:2;box-shadow:0 0 0 .6mm var(--paper)}
+.m-t{left:50%;top:3.3mm;margin-left:-1.7mm}.m-b{left:50%;bottom:3.3mm;margin-left:-1.7mm}
+.m-l{top:50%;left:3.3mm;margin-top:-1.7mm}.m-r{top:50%;right:3.3mm;margin-top:-1.7mm}
 
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+.content{position:absolute;left:15mm;right:15mm;top:14mm;bottom:14mm;display:flex;flex-direction:column;z-index:1}
 
-        /* Print Specific Styles */
-        @media print {
-            @page { size: landscape; margin: 10mm; }
-            body { background: white; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-            .no-print { display: none !important; }
-            .print-only { display: block !important; }
-            .print-full-width { width: 100% !important; max-width: none !important; margin: 0 !important; padding: 0 !important; }
-            
-            /* Typography for print */
-            body, table { font-size: 10pt; }
-            h1 { font-size: 14pt !important; text-align: center; font-weight: bold; margin-bottom: 4px; }
-            h2 { font-size: 12pt !important; text-align: center; margin-bottom: 12px; }
-            
-            /* Table Print Styles */
-            .print-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-            .print-table th, .print-table td { border: 1px solid #000; padding: 6px 8px; text-align: left; vertical-align: top; }
-            .print-table th { background-color: #f1f5f9 !important; font-weight: bold; text-align: center; }
-            .print-table-group-header { background-color: #e2e8f0 !important; font-weight: bold; text-align: left !important; }
-            
-            /* Remove shadows and borders from containers */
-            .shadow-sm, .shadow, .rounded-xl, .border { box-shadow: none !important; border-radius: 0 !important; border: none !important; }
-        }
-        
-        .print-only { display: none; }
-    </style>
+/* Header */
+.school{font-family:Georgia,"Times New Roman",serif;font-weight:700;font-size:23pt;letter-spacing:.5px;text-align:center;color:var(--navy);line-height:1.1}
+.addr{text-align:center;font-family:Georgia,serif;font-size:8.8pt;margin-top:1.6mm}
+.codes{text-align:center;font-size:8pt;color:var(--gold);font-weight:600;margin-top:.8mm;letter-spacing:.3px}
+.rule{height:1.2mm;margin:2.2mm 10mm 0;border-top:.35mm solid var(--gold);border-bottom:.2mm solid var(--navy)}
+.titlerow{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;margin-top:3.2mm}
+.pill{background:var(--navy);color:#fff;font-family:Georgia,serif;font-weight:700;font-size:13pt;letter-spacing:.8px;
+  padding:1.7mm 9mm;border-radius:3mm;text-align:center;white-space:nowrap}
+.medium{justify-self:end;border:.35mm solid var(--gold);background:#fff8e6;color:var(--navy);font-weight:700;font-size:9.5pt;
+  padding:1.5mm 5mm;border-radius:2.6mm;letter-spacing:.4px;white-space:nowrap}
+.sub{text-align:center;font-family:Georgia,serif;font-size:9.6pt;margin:2.6mm 0 3mm}
+.sub b{font-weight:700}
+.sub .sep{margin:0 3mm;color:var(--gold)}
+
+/* Tables */
+table.t{width:100%;border-collapse:collapse;table-layout:fixed;border:.5mm solid var(--navy)}
+.t th,.t td{border:.25mm solid var(--navy);padding:1.1mm 1.4mm;font-size:8pt;vertical-align:middle}
+.t th{background:var(--head);color:var(--navy);font-weight:700;text-align:center;line-height:1.28;font-size:7.4pt;padding:1.8mm 1mm}
+.t td{background:rgba(255,255,255,.74)}
+.t td.c{text-align:center}.t td.r{text-align:right;padding-right:3mm}
+.t td.nm b{display:block;font-size:8.6pt}
+.t td.nm span,.t td.q span{display:block;font-size:8pt}
+.t td.q b{font-size:8.6pt;display:block}
+table.mr tbody tr{height:13.5mm}
+table.cpf tbody tr{height:11mm}
+table.cpf td.net{font-weight:700;font-size:9pt}
+table.cpf td.mono{font-variant-numeric:tabular-nums;letter-spacing:.2px}
+table.cpf tfoot td{background:var(--head);font-weight:700;font-size:9pt;height:9mm;border-top:.5mm solid var(--navy)}
+
+/* Footer: Admin | QR | Headmaster */
+.foot{margin-top:auto;display:grid;grid-template-columns:1fr 36mm 1fr;align-items:end;column-gap:8mm;padding:0 4mm}
+.sig{display:flex;flex-direction:column}
+.sig .area{height:21mm;display:flex;align-items:flex-end;font-size:9pt;line-height:1.7}
+.sig .line{border-top:.35mm solid var(--navy)}
+.sig .lab{height:14mm;padding-top:1.2mm;font-size:8.6pt;font-weight:700;text-align:center;line-height:1.35}
+.sig .lab .nm{font-size:8.6pt;font-weight:600;font-family:Georgia,serif;font-weight:400;display:block;font-weight:600}
+.sig .lab .hm{font-weight:700}
+.sig .lab i{font-weight:400;font-size:7.8pt;display:block}
+.qrbox{display:flex;flex-direction:column;align-items:center}
+.qr{width:27mm;height:27mm;background:#fff;border:.4mm solid var(--gold);border-radius:1.6mm;padding:1.6mm;box-shadow:0 0 0 .6mm #fff}
+.qr svg{width:100%;height:100%;display:block}
+.qrcap{font-size:7pt;margin-top:1.2mm;text-align:center;color:#334155;height:14mm;line-height:1.3}
+
+@page{size:A4 landscape;margin:0}
+@media print{
+  body{background:#fff}
+  .toolbar{display:none!important}
+  #pages{padding:0;zoom:1!important;transform:none!important}
+  .sheet{margin:0;box-shadow:none}
+  .sheet:last-child{break-after:auto;page-break-after:auto}
+}
+</style>
 </head>
-<body class="flex h-screen overflow-hidden text-slate-800">
+<body>
 
-    <!-- Sidebar -->
-    <aside class="w-64 bg-brand-900 text-slate-300 flex flex-col no-print z-20 flex-shrink-0">
-        <div class="p-6 border-b border-brand-800">
-            <h2 class="text-xl font-bold text-white leading-tight">TFHS<br><span class="text-brand-secondary text-sm font-medium">Taldangra Fulmati H.S.</span></h2>
-            <p class="text-xs text-slate-400 mt-2">Para Teacher Management</p>
-        </div>
-        <nav class="flex-1 overflow-y-auto py-4">
-            <ul class="space-y-1 px-3">
-                <li>
-                    <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-lg bg-brand-primary text-white transition-colors text-left">
-                        <i class="fa-solid fa-chart-pie w-5 text-center"></i>
-                        <span class="font-medium">Dashboard</span>
-                    </button>
-                </li>
-                <li>
-                    <button onclick="switchTab('database')" id="nav-database" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-brand-800 hover:text-white transition-colors text-left text-slate-300">
-                        <i class="fa-solid fa-users w-5 text-center"></i>
-                        <span class="font-medium">Database</span>
-                    </button>
-                </li>
-                <li>
-                    <button onclick="switchTab('report-m')" id="nav-report-m" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-brand-800 hover:text-white transition-colors text-left text-slate-300">
-                        <i class="fa-regular fa-calendar-check w-5 text-center"></i>
-                        <span class="font-medium">Report (M)</span>
-                    </button>
-                </li>
-                <li>
-                    <button onclick="switchTab('format-cpf')" id="nav-format-cpf" class="nav-btn w-full flex items-center space-x-3 px-4 py-3 rounded-lg hover:bg-brand-800 hover:text-white transition-colors text-left text-slate-300">
-                        <i class="fa-solid fa-file-invoice-dollar w-5 text-center"></i>
-                        <span class="font-medium">FORMAT (CPF)</span>
-                    </button>
-                </li>
-            </ul>
-        </nav>
-    </aside>
+<div class="toolbar">
+  <h1>TFHS Para Teacher Reports</h1>
+  <label>Salary month (period ends on 10th)
+    <input type="month" id="endMonth">
+  </label>
+  <label>Headmaster mobile (for QR)
+    <input type="tel" id="hmMobile" placeholder="e.g. 9XXXXXXXXX" maxlength="15">
+  </label>
+  <div class="cyc" id="cycLabel"></div>
+  <button onclick="window.print()">Print / Save PDF (4 pages)</button>
+  <div class="jump">
+    <a href="#p1">1 · Return – Bengali</a><a href="#p2">2 · Return – Santali</a>
+    <a href="#p3">3 · CPF – Bengali</a><a href="#p4">4 · CPF – Santali</a>
+  </div>
+</div>
 
-    <!-- Main Content -->
-    <main class="flex-1 flex flex-col h-screen relative print-full-width bg-white">
-        
-        <!-- Desktop Header -->
-        <header class="bg-white border-b border-slate-200 px-6 py-4 flex justify-between items-center no-print z-10">
-            <div>
-                <h1 class="text-2xl font-bold text-slate-800" id="header-title">Dashboard Overview</h1>
-            </div>
-            <div class="flex items-center space-x-4 bg-slate-50 p-2 rounded-lg border border-slate-200">
-                <div class="flex items-center space-x-2">
-                    <label for="start-month" class="text-sm font-semibold text-slate-600"><i class="fa-solid fa-clock-rotate-left mr-1"></i> Start Cycle:</label>
-                    <input type="month" id="start-month" class="text-sm border border-slate-300 rounded px-2 py-1 focus:outline-none focus:border-brand-primary" onchange="handleCycleChange()">
-                </div>
-                <div class="h-6 w-px bg-slate-300"></div>
-                <button onclick="window.print()" class="px-4 py-1.5 bg-white border border-slate-300 text-slate-700 text-sm font-medium rounded hover:bg-slate-100 transition-colors flex items-center shadow-sm">
-                    <i class="fa-solid fa-print mr-2"></i> Print
-                </button>
-            </div>
-        </header>
+<div id="pages"></div>
 
-        <!-- Scrollable Content Area -->
-        <div class="flex-1 overflow-y-auto p-6 relative print-full-width">
-            
-            <!-- TAB: Dashboard -->
-            <section id="tab-dashboard" class="tab-content active max-w-6xl mx-auto">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 flex items-center border-l-4 border-l-blue-500">
-                        <div class="w-12 h-12 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-xl">
-                            <i class="fa-solid fa-users"></i>
-                        </div>
-                        <div class="ml-4">
-                            <p class="text-sm font-medium text-slate-500">Total Teachers</p>
-                            <h3 class="text-2xl font-bold text-slate-800" id="dash-total-teachers">0</h3>
-                        </div>
-                    </div>
-                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 flex items-center border-l-4 border-l-emerald-500">
-                        <div class="w-12 h-12 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-xl">
-                            <i class="fa-solid fa-money-bill-wave"></i>
-                        </div>
-                        <div class="ml-4">
-                            <p class="text-sm font-medium text-slate-500">Monthly Net Disbursed</p>
-                            <h3 class="text-2xl font-bold text-slate-800" id="dash-total-net">₹0</h3>
-                        </div>
-                    </div>
-                    <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 flex items-center border-l-4 border-l-purple-500">
-                        <div class="w-12 h-12 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center text-xl">
-                            <i class="fa-solid fa-piggy-bank"></i>
-                        </div>
-                        <div class="ml-4">
-                            <p class="text-sm font-medium text-slate-500">Monthly EPF Contribution</p>
-                            <h3 class="text-2xl font-bold text-slate-800" id="dash-total-epf">₹0</h3>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
-                    <h3 class="text-lg font-bold text-slate-800 mb-4 border-b pb-2">System Notice</h3>
-                    <p class="text-slate-600 text-sm leading-relaxed mb-4">
-                        Welcome to the unified Para Teacher Management System for Taldangra Fulmati High School (H.S.).
-                        The database has been updated: <b>Sailen Kr. Barui</b> has been marked as transferred and removed from active payroll. 
-                        Three new <b>Santali Medium</b> para teachers have been added to the master roster.
-                    </p>
-                    <p class="text-slate-600 text-sm leading-relaxed">
-                        Use the top control panel to select the starting month for generating reports. The system will automatically calculate the <b>11th to 10th</b> billing cycle across 4 consecutive months for both Report (M) and FORMAT (CPF).
-                    </p>
-                </div>
-            </section>
+<script>
+/* ======================= DATA ======================= */
+const SCHOOL = {
+  name:"TALDANGRA FULMATI HIGH SCHOOL (H.S.)",
+  addr:"P.O. &amp; Block - Taldangra, Sub-Division - Khatra, District - Bankura, West Bengal - 722152",
+  codes:"HS Code 114071 &nbsp;|&nbsp; Index No. U1-083 &nbsp;|&nbsp; DISE 19132104401",
+  circle:"TALDANGRA", place:"Taldangra",
+  hm:"PRABIR KUMAR DANGAR"
+};
+const SAL = { gross:15523, ptax:130 };            // consolidated pay & P.Tax (same for all)
+SAL.epf = Math.min(Math.round(SAL.gross*0.12),1800); // 12% of gross but not more than Rs.1800
+SAL.net = SAL.gross - SAL.ptax - SAL.epf;
 
-            <!-- TAB: Database -->
-            <section id="tab-database" class="tab-content max-w-7xl mx-auto">
-                <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-                    <div class="px-6 py-4 border-b border-slate-200 bg-slate-50 flex justify-between items-center no-print">
-                        <h3 class="font-bold text-slate-800">Master Employee Database</h3>
-                        <span class="text-xs bg-brand-100 text-brand-800 px-2 py-1 rounded font-medium border border-brand-200">Active Payroll Only</span>
-                    </div>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-sm text-left">
-                            <thead class="text-xs text-slate-600 uppercase bg-slate-100 border-b border-slate-200">
-                                <tr>
-                                    <th class="px-4 py-3 text-center">Sl</th>
-                                    <th class="px-4 py-3">Name</th>
-                                    <th class="px-4 py-3">D.O.B.</th>
-                                    <th class="px-4 py-3">D.O.J.</th>
-                                    <th class="px-4 py-3">Qualification</th>
-                                    <th class="px-4 py-3">Medium</th>
-                                    <th class="px-4 py-3">Account No</th>
-                                    <th class="px-4 py-3">IFS Code</th>
-                                    <th class="px-4 py-3">Aadhaar</th>
-                                </tr>
-                            </thead>
-                            <tbody id="db-table-body" class="divide-y divide-slate-200">
-                                <!-- Populated by JS -->
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </section>
+const TEACHERS = {
+  BENGALI:[
+    {name:"BHARATI DEY",  dob:"12.07.1973", qual:"B.A.(GEO)",       doj:["19.10.2004"], bank:"SBI<br>TALDANGRA", acc:"32171567657", ifsc:"SBIN0012397"},
+    {name:"RINKU BHUIN",  dob:"01.03.1980", qual:"B.A.(Beng)",      doj:["19.10.2004"], bank:"SBI<br>TALDANGRA", acc:"32171603530", ifsc:"SBIN0012397"},
+    {name:"BISWARUP DEY", dob:"12.04.1987", qual:"B.A.(Eng)",       doj:["17.12.2008"], bank:"SBI<br>TALDANGRA", acc:"32169323535", ifsc:"SBIN0012397"},
+    {name:"DOLI MONDAL",  dob:"17.01.1975", qual:"B.Sc.(Pure Sc.)", doj:["1st:03.01.2007","2nd: 02.02.2010"], bank:"SBI<br>TALDANGRA", acc:"32171877251", ifsc:"SBIN0012397"}
+  ],
+  SANTALI:[
+    {name:"GANESH MANDI",  dob:"04.01.1993", qual:"B.A.(Hons)", doj:["02.03.2015"], bank:"UBI<br>SIMLAPAL",  acc:"0448010233552", ifsc:"PUNB0044820"},
+    {name:"BIKASH BASKEY", dob:"18.10.1980", qual:"B.A.(Pass)", doj:["01.03.2016"], bank:"SBI<br>TALDANGRA", acc:"35720612096",   ifsc:"SBIN0012397"},
+    {name:"LAKSHMI SAREN", dob:"25.02.1989", qual:"B.A.(Pass)", doj:["01.03.2016"], bank:"SBI<br>TALDANGRA", acc:"35702689775",   ifsc:"SBIN0012397"}
+  ]
+};
 
-            <!-- TAB: Report M -->
-            <section id="tab-report-m" class="tab-content print-full-width mx-auto">
-                <!-- Print Headers -->
-                <div class="print-only mb-6">
-                    <h1>TALDANGRA FULMATI HIGH SCHOOL (H.S.)</h1>
-                    <h2>MONTHLY RETURN OF PARA TEACHERS [REPORT (M)]</h2>
-                </div>
+/* ======================= HELPERS ======================= */
+const MONTHS=["January","February","March","April","May","June","July","August","September","October","November","December"];
+const pad=n=>String(n).padStart(2,'0');
+const dmy=d=>pad(d.getDate())+'.'+pad(d.getMonth()+1)+'.'+d.getFullYear();   // dd.mm.yyyy
+const inr=n=>Number(n).toLocaleString('en-IN');
 
-                <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden print-full-width">
-                    <div class="px-6 py-4 border-b border-slate-200 bg-slate-50 flex justify-between items-center flex-wrap gap-4 no-print">
-                        <div>
-                            <h3 class="font-bold text-slate-800">Report (M) - Monthly Return</h3>
-                            <p class="text-xs text-slate-500 mt-1">Grouped by medium</p>
-                        </div>
-                        <div class="flex items-center space-x-2 bg-white border border-slate-300 rounded px-3 py-1.5 shadow-sm">
-                            <span class="text-xs font-semibold text-slate-600">Select Cycle:</span>
-                            <select id="report-m-cycle-select" class="text-sm outline-none bg-transparent font-medium text-brand-primary cursor-pointer" onchange="renderReportM()">
-                                <!-- Options populated by JS -->
-                            </select>
-                        </div>
-                    </div>
-                    
-                    <!-- Dynamic cycle display for print and screen -->
-                    <div class="px-6 py-3 bg-blue-50 border-b border-blue-100 text-center print-only-header">
-                        <p class="text-sm font-semibold text-blue-900">
-                            Billing Cycle: <span id="report-m-cycle-display" class="font-bold tracking-wide">--/--/---- to --/--/----</span>
-                        </p>
-                    </div>
+/* Cycle: 11th of previous month -> 10th of selected month */
+function cycleFor(y,m){                       // m = 0-11 (month in which period ends)
+  const start=new Date(y,m-1,11), end=new Date(y,m,10);
+  // cumulative leave counted from 11 January (calendar-year basis)
+  let cy=end.getFullYear(); if(end < new Date(cy,0,11)) cy--;
+  const cumFrom=new Date(cy,0,11);
+  return {start,end,cumFrom,monthLabel:MONTHS[m]+'-'+y,year:end.getFullYear()};
+}
 
-                    <div class="overflow-x-auto print-full-width p-0 md:p-4">
-                        <table class="w-full text-sm text-left print-table">
-                            <thead class="text-xs text-slate-700 bg-slate-100 uppercase">
-                                <tr>
-                                    <th class="w-12 text-center py-3">Sl<br>No</th>
-                                    <th class="py-3 px-2">Name of Para Teacher</th>
-                                    <th class="py-3 px-2">Qualification &<br>Date of joining</th>
-                                    <th class="text-center py-3 px-2">Working<br>Days</th>
-                                    <th class="text-center py-3 px-2">Closing<br>Days</th>
-                                    <th class="text-center py-3 px-2">C.L.<br>Enjoyed</th>
-                                    <th class="text-center py-3 px-2">Other<br>Leave</th>
-                                    <th class="py-3 px-2">Remarks</th>
-                                    <th class="py-3 px-2 w-32">Signature</th>
-                                    <th class="py-3 px-2">AADHAAR</th>
-                                </tr>
-                            </thead>
-                            <tbody id="report-m-body" class="divide-y divide-slate-200">
-                                <!-- Populated by JS -->
-                            </tbody>
-                        </table>
-                    </div>
-                    
-                    <!-- Print Signatures -->
-                    <div class="print-only mt-16 px-8 flex justify-between text-sm font-bold">
-                        <div>Signature of Preparing Authority</div>
-                        <div>Signature of HOI / TIC with Seal</div>
-                    </div>
-                </div>
-            </section>
+function qrSvg(text){
+  if(typeof qrcode==='undefined') return '<div style="font-size:7pt;text-align:center;padding-top:8mm">QR needs internet<br>once to load</div>';
+  const q=qrcode(0,'M'); q.addData(text); q.make();
+  const n=q.getModuleCount(); let d='';
+  for(let r=0;r<n;r++)for(let c=0;c<n;c++) if(q.isDark(r,c)) d+=`M${c} ${r}h1v1h-1z`;
+  return `<svg viewBox="0 0 ${n} ${n}" shape-rendering="crispEdges" xmlns="http://www.w3.org/2000/svg"><path d="${d}" fill="#0b1b3a"/></svg>`;
+}
+function vcard(){
+  const tel=(document.getElementById('hmMobile').value||'').trim();
+  return ['BEGIN:VCARD','VERSION:3.0','N:Dangar;Prabir Kumar;;;','FN:Prabir Kumar Dangar','TITLE:Headmaster',
+    'ORG:Taldangra Fulmati High School (H.S.)','ADR:;;P.O. & Block Taldangra;Khatra;West Bengal;722152;India',
+    tel?('TEL;TYPE=CELL:'+tel):'','END:VCARD'].filter(Boolean).join('\n');
+}
 
-            <!-- TAB: Format CPF -->
-            <section id="tab-format-cpf" class="tab-content print-full-width mx-auto">
-                <!-- Print Headers -->
-                <div class="print-only mb-6">
-                    <h1>TALDANGRA FULMATI HIGH SCHOOL (H.S.)</h1>
-                    <h2>SALARY STATEMENT & CPF DEDUCTION [FORMAT (CPF)]</h2>
-                </div>
+/* ======================= PAGE BUILDERS ======================= */
+function frame(inner,id){
+  return `<section class="sheet" id="${id}">
+    <div class="b1"></div><div class="b2"></div><div class="b3"></div>
+    <div class="corner c-tl"></div><div class="corner c-tr"></div><div class="corner c-bl"></div><div class="corner c-br"></div>
+    <div class="mid m-t"></div><div class="mid m-b"></div><div class="mid m-l"></div><div class="mid m-r"></div>
+    <div class="content">${inner}</div></section>`;
+}
+function head(title,medium){
+  return `<div class="school">${SCHOOL.name}</div>
+    <div class="addr">${SCHOOL.addr}</div>
+    <div class="codes">${SCHOOL.codes}</div>
+    <div class="rule"></div>
+    <div class="titlerow"><div></div><div class="pill">${title}</div><div class="medium">${medium} MEDIUM</div></div>`;
+}
+function footer(cy,qr){
+  return `<div class="foot">
+    <div class="sig">
+      <div class="area">Date : ____ / ____ / ${cy.year}<br>Place : ${SCHOOL.place}</div>
+      <div class="line"></div>
+      <div class="lab">Signature of Administrator / Secretary / President</div>
+    </div>
+    <div class="qrbox"><div class="qr">${qr}</div><div class="qrcap">Scan: Headmaster contact</div></div>
+    <div class="sig">
+      <div class="area"></div>
+      <div class="line"></div>
+      <div class="lab">Signature of Headmaster<span class="nm">${SCHOOL.hm}</span><span class="hm">Headmaster</span><i>(with school seal)</i></div>
+    </div>
+  </div>`;
+}
 
-                <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden print-full-width">
-                    <div class="px-6 py-4 border-b border-slate-200 bg-slate-50 flex justify-between items-center flex-wrap gap-4 no-print">
-                        <div>
-                            <h3 class="font-bold text-slate-800">FORMAT (CPF) - Salary Statement</h3>
-                            <p class="text-xs text-slate-500 mt-1">Details generated with fixed salary structure</p>
-                        </div>
-                        <div class="flex items-center space-x-2 bg-white border border-slate-300 rounded px-3 py-1.5 shadow-sm">
-                            <span class="text-xs font-semibold text-slate-600">Select Cycle:</span>
-                            <select id="cpf-cycle-select" class="text-sm outline-none bg-transparent font-medium text-brand-primary cursor-pointer" onchange="renderFormatCPF()">
-                                <!-- Options populated by JS -->
-                            </select>
-                        </div>
-                    </div>
+function monthlyReturn(medium,list,cy,qr,id){
+  const s=dmy(cy.start), e=dmy(cy.end), f=dmy(cy.cumFrom);
+  const rows=list.map((t,i)=>`<tr>
+    <td class="c">${i+1}</td>
+    <td class="nm"><b>${t.name}</b><span>${t.dob}</span></td>
+    <td class="q"><b>${t.qual}</b>${t.doj.map(d=>`<span>${d}</span>`).join('')}</td>
+    <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>`).join('');
+  const widths=[9,38,34,16,16,16,16,25,25,20,29,23];
+  return frame(`
+    ${head('MONTHLY RETURN',medium)}
+    <div class="sub">Report of the Para Teacher for the Period From <b>${s}</b> To <b>${e}</b></div>
+    <table class="t mr">
+      <colgroup>${widths.map(w=>`<col style="width:${w}mm">`).join('')}</colgroup>
+      <thead><tr>
+        <th>Sl.<br>No.</th><th>Name of the<br>Para Teacher<br>with Date of Birth</th><th>Qualification &amp;<br>Date of Joining</th>
+        <th>Working<br>Days<br>in this<br>Month</th><th>Closing<br>Days<br>in this<br>Month</th>
+        <th>C.L.<br>Enjoyed<br>in this<br>Month</th><th>Other<br>Leave<br>in this<br>Month</th>
+        <th>Total C.L.<br>Enjoyed from<br>${f}<br>to ${e}</th><th>Total Other<br>Leave Enjoyed<br>from ${f}<br>to ${e}</th>
+        <th>Remarks</th><th>Signature of<br>Para Teacher</th><th>AADHAAR</th>
+      </tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+    ${footer(cy,qr)}`,id);
+}
 
-                    <!-- Dynamic cycle display for print and screen -->
-                    <div class="px-6 py-3 bg-blue-50 border-b border-blue-100 text-center print-only-header">
-                        <p class="text-sm font-semibold text-blue-900">
-                            Billing Cycle: <span id="cpf-cycle-display" class="font-bold tracking-wide">--/--/---- to --/--/----</span>
-                        </p>
-                    </div>
+function salaryStatement(medium,list,cy,qr,id){
+  const n=list.length;
+  const rows=list.map((t,i)=>`<tr>
+    <td class="c">${i+1}</td><td class="nm"><b>${t.name}</b></td><td class="c">${t.bank}</td>
+    <td class="c mono">${t.acc}</td><td class="c mono">${t.ifsc}</td><td class="c">0</td>
+    <td class="c">${inr(SAL.gross)}</td><td class="c">${inr(SAL.ptax)}</td><td class="c">${inr(SAL.epf)}</td>
+    <td class="c net">${inr(SAL.net)}</td><td></td></tr>`).join('');
+  const widths=[9,40,28,36,28,18,25,16,29,25,13];
+  return frame(`
+    ${head('SALARY STATEMENT &nbsp;(FORMAT - CPF)',medium)}
+    <div class="sub">Salary Statement of Para Teacher (Upper Primary) for the Month of <b>${cy.monthLabel}</b>
+      <span class="sep">◆</span> Name of Circle : <b>${SCHOOL.circle}</b></div>
+    <table class="t cpf">
+      <colgroup>${widths.map(w=>`<col style="width:${w}mm">`).join('')}</colgroup>
+      <thead><tr>
+        <th>Sl.<br>No.</th><th>Name of<br>Employee</th><th>Bank &amp;<br>Branch Name</th><th>Account No</th><th>IFS Code</th>
+        <th>Nos of Days<br>Leave Without<br>Pay</th><th>Gross Consolidated<br>Salary for the Month<br>of ${cy.monthLabel}</th>
+        <th>P.TAX</th><th>EPF Deducted 12% of<br>Gross Salary but Not<br>More Than Rs.1800</th>
+        <th>Net Salary for the<br>Month of<br>${cy.monthLabel}</th><th>Remarks</th>
+      </tr></thead>
+      <tbody>${rows}</tbody>
+      <tfoot><tr><td></td><td colspan="4" class="c">TOTAL</td><td></td>
+        <td class="c">${inr(SAL.gross*n)}</td><td class="c">${inr(SAL.ptax*n)}</td><td class="c">${inr(SAL.epf*n)}</td>
+        <td class="c">${inr(SAL.net*n)}</td><td></td></tr></tfoot>
+    </table>
+    ${footer(cy,qr)}`,id);
+}
 
-                    <div class="overflow-x-auto print-full-width p-0 md:p-4">
-                        <table class="w-full text-sm text-left print-table">
-                            <thead class="text-xs text-slate-700 bg-slate-100 uppercase text-center">
-                                <tr>
-                                    <th class="w-10 py-3">Sl<br>No</th>
-                                    <th class="py-3 px-2 text-left">Name of Employee</th>
-                                    <th class="py-3 px-2 text-left">Bank & Branch Name</th>
-                                    <th class="py-3 px-2">Account No</th>
-                                    <th class="py-3 px-2">IFS Code</th>
-                                    <th class="py-3 px-2">Nos of Days<br>Leave W/O Pay</th>
-                                    <th class="py-3 px-2">Gross<br>Salary</th>
-                                    <th class="py-3 px-2">P.TAX</th>
-                                    <th class="py-3 px-2">EPF<br>Deducted</th>
-                                    <th class="py-3 px-2">Net<br>Salary</th>
-                                    <th class="py-3 px-2 text-left">Remarks</th>
-                                </tr>
-                            </thead>
-                            <tbody id="cpf-body" class="divide-y divide-slate-200">
-                                <!-- Populated by JS -->
-                            </tbody>
-                            <tfoot id="cpf-footer" class="bg-slate-50 font-bold border-t-2 border-slate-300">
-                                <!-- Totals populated by JS -->
-                            </tfoot>
-                        </table>
-                    </div>
+/* ======================= RENDER ======================= */
+function render(){
+  const v=document.getElementById('endMonth').value;
+  if(!v) return;
+  const [y,m]=v.split('-').map(Number);
+  const cy=cycleFor(y,m-1);
+  const qr=qrSvg(vcard());
+  document.getElementById('cycLabel').textContent='Period: '+dmy(cy.start)+' to '+dmy(cy.end)+'  |  Salary: '+cy.monthLabel;
+  document.getElementById('pages').innerHTML =
+      monthlyReturn('BENGALI',TEACHERS.BENGALI,cy,qr,'p1')
+    + monthlyReturn('SANTALI',TEACHERS.SANTALI,cy,qr,'p2')
+    + salaryStatement('BENGALI',TEACHERS.BENGALI,cy,qr,'p3')
+    + salaryStatement('SANTALI',TEACHERS.SANTALI,cy,qr,'p4');
+  fit();
+}
+function fit(){                                   // scale preview to screen width (print unaffected)
+  const el=document.getElementById('pages');
+  const need=297/25.4*96+32;                      // sheet width in px + gutter
+  el.style.zoom=Math.min(1,window.innerWidth/need);
+}
 
-                    <!-- Print Signatures -->
-                    <div class="print-only mt-16 px-8 flex justify-between text-sm font-bold">
-                        <div>Signature of Preparing Authority</div>
-                        <div>Signature of HOI / TIC with Seal</div>
-                    </div>
-                </div>
-            </section>
-
-        </div>
-    </main>
-
-    <script>
-        // --- Data Definitions ---
-        
-        // As requested: Existing teachers (excluding Sailen Kr. Barui) + 3 New Santali Medium Teachers
-        const teachers = [
-            { id: 1, name: "BHARATI DEY", dob: "12-Jul-1973", doj: "19-Oct-2004", qual: "B.A.(GEO)", medium: "Normal Section", acc: "33887766551", ifsc: "SBIN0012397", aadhaar: "1234-5678-9012" },
-            { id: 2, name: "RINKU BHUIN", dob: "01-Mar-1980", doj: "19-Oct-2004", qual: "B.A.(Beng)", medium: "Normal Section", acc: "33887766552", ifsc: "SBIN0012397", aadhaar: "2345-6789-0123" },
-            { id: 3, name: "BISWARUP DEY", dob: "12-Apr-1987", doj: "17-Dec-2008", qual: "B.A.(Eng)", medium: "Normal Section", acc: "33887766553", ifsc: "SBIN0012397", aadhaar: "3456-7890-1234" },
-            { id: 4, name: "DOLI MONDAL", dob: "17-Jan-1975", doj: "03-Jan-2007", qual: "B.Sc.(Pure Sc.)", medium: "Normal Section", acc: "33887766554", ifsc: "SBIN0012397", aadhaar: "4567-8901-2345" },
-            { id: 5, name: "SANTALI TEACHER 1", dob: "05-May-1992", doj: "01-Aug-2026", qual: "B.A.(Santali)", medium: "Santali Medium", acc: "44998877661", ifsc: "SBIN0012397", aadhaar: "9876-5432-1098" },
-            { id: 6, name: "SANTALI TEACHER 2", dob: "15-Aug-1994", doj: "01-Aug-2026", qual: "M.A.(Santali)", medium: "Santali Medium", acc: "44998877662", ifsc: "SBIN0012397", aadhaar: "8765-4321-0987" },
-            { id: 7, name: "SANTALI TEACHER 3", dob: "22-Nov-1995", doj: "01-Aug-2026", qual: "B.A.(Santali)", medium: "Santali Medium", acc: "44998877663", ifsc: "SBIN0012397", aadhaar: "7654-3210-9876" }
-        ];
-
-        // Fixed Salary Structure
-        const salaryStructure = {
-            bank: "SBI TALDANGRA",
-            gross: 15523,
-            ptax: 130,
-            epf: 1800,
-            net: 13593
-        };
-
-        // --- Initialization & Setup ---
-        let baseDate = new Date(2026, 8); // Default to Sept 2026 (Month index 8)
-        let cycles = [];
-
-        document.addEventListener('DOMContentLoaded', () => {
-            // Set initial month input value
-            const monthInput = document.getElementById('start-month');
-            const now = new Date();
-            // Default to current year and month if not defined
-            monthInput.value = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
-            
-            updateCycles();
-            
-            // Populate Views
-            renderDashboard();
-            renderDatabase();
-            renderReportM();
-            renderFormatCPF();
-        });
-
-        // --- Tab Switching Logic ---
-        function switchTab(tabId) {
-            // Update UI
-            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-            document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.classList.remove('bg-brand-primary', 'text-white');
-                btn.classList.add('hover:bg-brand-800', 'hover:text-white', 'text-slate-300');
-            });
-            
-            document.getElementById('tab-' + tabId).classList.add('active');
-            const activeBtn = document.getElementById('nav-' + tabId);
-            if(activeBtn) {
-                activeBtn.classList.remove('hover:bg-brand-800', 'hover:text-white', 'text-slate-300');
-                activeBtn.classList.add('bg-brand-primary', 'text-white');
-            }
-
-            // Update Header Title based on tab
-            const titles = {
-                'dashboard': 'Dashboard Overview',
-                'database': 'Master Database',
-                'report-m': 'Report (M) - Monthly Return',
-                'format-cpf': 'FORMAT (CPF) - Salary Statement'
-            };
-            document.getElementById('header-title').innerText = titles[tabId];
-        }
-
-        // --- STREAMING_CHUNK:JavaScript - Date handling and Cycle Generation ---
-        function formatDate(date) {
-            const dd = String(date.getDate()).padStart(2, '0');
-            const mm = String(date.getMonth() + 1).padStart(2, '0');
-            const yyyy = date.getFullYear();
-            return `${dd}/${mm}/${yyyy}`;
-        }
-
-        function handleCycleChange() {
-            const monthVal = document.getElementById('start-month').value;
-            if (monthVal) {
-                const parts = monthVal.split('-');
-                baseDate = new Date(parts[0], parseInt(parts[1]) - 1);
-                updateCycles();
-                renderReportM();
-                renderFormatCPF();
-            }
-        }
-
-        function updateCycles() {
-            cycles = [];
-            const year = baseDate.getFullYear();
-            const month = baseDate.getMonth();
-
-            // Generate 4 consecutive months
-            for (let i = 0; i < 4; i++) {
-                // 11th of current month
-                const start = new Date(year, month + i, 11);
-                // 10th of NEXT month
-                const end = new Date(year, month + i + 1, 10);
-                
-                cycles.push({
-                    start: start,
-                    end: end,
-                    label: `${formatDate(start)} to ${formatDate(end)}`,
-                    monthName: end.toLocaleString('default', { month: 'short', year: 'numeric' })
-                });
-            }
-
-            // Update Dropdowns
-            const selects = ['report-m-cycle-select', 'cpf-cycle-select'];
-            selects.forEach(selId => {
-                const sel = document.getElementById(selId);
-                const currentIdx = sel.selectedIndex >= 0 ? sel.selectedIndex : 0;
-                sel.innerHTML = '';
-                cycles.forEach((cycle, index) => {
-                    const opt = document.createElement('option');
-                    opt.value = index;
-                    opt.textContent = `${cycle.monthName} (${cycle.label})`;
-                    sel.appendChild(opt);
-                });
-                sel.selectedIndex = currentIdx; // Keep selected index if possible
-            });
-        }
-
-        // --- STREAMING_CHUNK:JavaScript - Rendering Functions ---
-
-        function renderDashboard() {
-            document.getElementById('dash-total-teachers').innerText = teachers.length;
-            const totalNet = teachers.length * salaryStructure.net;
-            const totalEpf = teachers.length * salaryStructure.epf;
-            document.getElementById('dash-total-net').innerText = `₹${totalNet.toLocaleString('en-IN')}`;
-            document.getElementById('dash-total-epf').innerText = `₹${totalEpf.toLocaleString('en-IN')}`;
-        }
-
-        function renderDatabase() {
-            const tbody = document.getElementById('db-table-body');
-            tbody.innerHTML = '';
-            
-            teachers.forEach(t => {
-                const mediumBadge = t.medium === 'Santali Medium' 
-                    ? '<span class="px-2 py-1 rounded bg-amber-100 text-amber-800 text-xs font-semibold">Santali</span>'
-                    : '<span class="px-2 py-1 rounded bg-slate-100 text-slate-800 text-xs font-semibold">Normal</span>';
-
-                tbody.innerHTML += `
-                    <tr class="hover:bg-slate-50">
-                        <td class="px-4 py-3 text-center text-slate-500 font-medium">${t.id}</td>
-                        <td class="px-4 py-3 font-semibold text-slate-900">${t.name}</td>
-                        <td class="px-4 py-3 text-slate-600">${t.dob}</td>
-                        <td class="px-4 py-3 text-slate-600">${t.doj}</td>
-                        <td class="px-4 py-3 text-slate-600">${t.qual}</td>
-                        <td class="px-4 py-3">${mediumBadge}</td>
-                        <td class="px-4 py-3 text-slate-600 font-mono text-xs">${t.acc}</td>
-                        <td class="px-4 py-3 text-slate-600 font-mono text-xs">${t.ifsc}</td>
-                        <td class="px-4 py-3 text-slate-600 font-mono text-xs">${t.aadhaar}</td>
-                    </tr>
-                `;
-            });
-        }
-
-        function renderReportM() {
-            const selIdx = document.getElementById('report-m-cycle-select').selectedIndex;
-            if(selIdx === -1 || cycles.length === 0) return;
-            const cycle = cycles[selIdx];
-            
-            document.getElementById('report-m-cycle-display').innerText = cycle.label;
-            const tbody = document.getElementById('report-m-body');
-            tbody.innerHTML = '';
-
-            const renderGroup = (groupName, teachersList) => {
-                if(teachersList.length === 0) return;
-                
-                // Group Header Row
-                tbody.innerHTML += `
-                    <tr class="print-table-group-header">
-                        <td colspan="10" class="px-4 py-2 bg-slate-200 text-slate-800 font-bold uppercase text-xs tracking-wider">
-                            ${groupName}
-                        </td>
-                    </tr>
-                `;
-                
-                // Teacher Rows
-                teachersList.forEach(t => {
-                    tbody.innerHTML += `
-                        <tr class="hover:bg-slate-50">
-                            <td class="text-center py-2 px-2 font-medium">${t.id}</td>
-                            <td class="py-2 px-2 font-semibold">${t.name}</td>
-                            <td class="py-2 px-2 text-xs">${t.qual}<br><span class="text-slate-500">DOJ: ${t.doj}</span></td>
-                            <td class="text-center py-2 px-2 font-semibold text-brand-primary">22</td>
-                            <td class="text-center py-2 px-2">8</td>
-                            <td class="text-center py-2 px-2">0</td>
-                            <td class="text-center py-2 px-2">0</td>
-                            <td class="py-2 px-2 text-slate-400 italic text-xs">Nil</td>
-                            <td class="py-2 px-2 border-b border-slate-300"></td> <!-- Signature space -->
-                            <td class="py-2 px-2 font-mono text-xs">${t.aadhaar}</td>
-                        </tr>
-                    `;
-                });
-            };
-
-            const normalTeachers = teachers.filter(t => t.medium === 'Normal Section');
-            const santaliTeachers = teachers.filter(t => t.medium === 'Santali Medium');
-
-            renderGroup('Normal Section', normalTeachers);
-            renderGroup('Santali Medium', santaliTeachers);
-        }
-
-        function renderFormatCPF() {
-            const selIdx = document.getElementById('cpf-cycle-select').selectedIndex;
-            if(selIdx === -1 || cycles.length === 0) return;
-            const cycle = cycles[selIdx];
-            
-            document.getElementById('cpf-cycle-display').innerText = cycle.label;
-            const tbody = document.getElementById('cpf-body');
-            const tfoot = document.getElementById('cpf-footer');
-            tbody.innerHTML = '';
-            
-            let totalGross = 0;
-            let totalPtax = 0;
-            let totalEpf = 0;
-            let totalNet = 0;
-
-            teachers.forEach(t => {
-                totalGross += salaryStructure.gross;
-                totalPtax += salaryStructure.ptax;
-                totalEpf += salaryStructure.epf;
-                totalNet += salaryStructure.net;
-
-                tbody.innerHTML += `
-                    <tr class="hover:bg-slate-50 text-center">
-                        <td class="py-2 px-2 font-medium">${t.id}</td>
-                        <td class="py-2 px-2 text-left font-semibold">${t.name}<br><span class="text-xs font-normal text-slate-500">${t.medium}</span></td>
-                        <td class="py-2 px-2 text-left text-xs">${salaryStructure.bank}</td>
-                        <td class="py-2 px-2 font-mono text-xs">${t.acc}</td>
-                        <td class="py-2 px-2 font-mono text-xs">${t.ifsc}</td>
-                        <td class="py-2 px-2">0</td>
-                        <td class="py-2 px-2 text-right">₹${salaryStructure.gross}</td>
-                        <td class="py-2 px-2 text-right">₹${salaryStructure.ptax}</td>
-                        <td class="py-2 px-2 text-right">₹${salaryStructure.epf}</td>
-                        <td class="py-2 px-2 text-right font-bold text-emerald-700">₹${salaryStructure.net}</td>
-                        <td class="py-2 px-2 text-left text-xs italic font-medium">Paid via DD Mode</td>
-                    </tr>
-                `;
-            });
-
-            // Footer Totals
-            tfoot.innerHTML = `
-                <tr class="text-center bg-slate-100">
-                    <td colspan="6" class="py-3 px-2 text-right uppercase tracking-wide">Grand Total:</td>
-                    <td class="py-3 px-2 text-right">₹${totalGross.toLocaleString('en-IN')}</td>
-                    <td class="py-3 px-2 text-right">₹${totalPtax.toLocaleString('en-IN')}</td>
-                    <td class="py-3 px-2 text-right">₹${totalEpf.toLocaleString('en-IN')}</td>
-                    <td class="py-3 px-2 text-right font-bold text-emerald-700 text-base">₹${totalNet.toLocaleString('en-IN')}</td>
-                    <td></td>
-                </tr>
-            `;
-        }
-    </script>
+(function init(){
+  const now=new Date();
+  let y=now.getFullYear(), m=now.getMonth();      // period ends on the next 10th
+  if(now.getDate()>10){ m++; if(m>11){m=0;y++;} }
+  document.getElementById('endMonth').value=y+'-'+pad(m+1);
+  try{ document.getElementById('hmMobile').value=localStorage.getItem('tfhs_hm_mobile')||''; }catch(e){}
+  document.getElementById('endMonth').addEventListener('change',render);
+  document.getElementById('hmMobile').addEventListener('input',()=>{
+    try{ localStorage.setItem('tfhs_hm_mobile',document.getElementById('hmMobile').value); }catch(e){}
+    render();
+  });
+  window.addEventListener('resize',fit);
+  window.addEventListener('load',render);
+  render();
+})();
+</script>
 </body>
 </html>
