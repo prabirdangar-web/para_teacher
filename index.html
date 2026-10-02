@@ -2,526 +2,81 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TFHS Para Teacher Dashboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TFHS Para Teacher Reports – 4 A4 Pages</title>
 <style>
-:root{
-  --navy:#0f172a;--navy2:#1e293b;--blue:#2563eb;--blue2:#dbeafe;
-  --green:#059669;--amber:#d97706;--red:#dc2626;--slate:#64748b;
-  --line:#cbd5e1;--paper:#fff;--bg:#f1f5f9;
-}
-*{box-sizing:border-box}
-body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:#0f172a}
-.app{display:flex;min-height:100vh}
-.sidebar{width:245px;background:var(--navy);color:#cbd5e1;padding:20px 14px;position:fixed;inset:0 auto 0 0}
-.brand{padding:6px 10px 22px;border-bottom:1px solid #334155}
-.brand h1{font-size:21px;color:#fff;margin:0 0 5px}.brand p{font-size:12px;margin:0;color:#94a3b8}
-.nav{display:grid;gap:8px;margin-top:20px}
-.nav button{border:0;background:transparent;color:#cbd5e1;text-align:left;padding:12px 14px;border-radius:9px;font-weight:700;cursor:pointer}
-.nav button:hover,.nav button.active{background:var(--blue);color:#fff}
-.main{margin-left:245px;width:calc(100% - 245px)}
-.topbar{position:sticky;top:0;z-index:10;background:#fff;border-bottom:1px solid #e2e8f0;padding:14px 22px;display:flex;justify-content:space-between;align-items:center;gap:15px}
-.topbar h2{margin:0;font-size:21px}
-.controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.controls label{font-size:12px;font-weight:700;color:#475569}
-.controls input,.controls select,.controls button{height:36px;border:1px solid #cbd5e1;border-radius:7px;padding:0 10px;background:#fff}
-.controls button{cursor:pointer;font-weight:700}.primary{background:var(--blue)!important;color:#fff;border-color:var(--blue)!important}
-.content{padding:22px}
-.tab{display:none}.tab.active{display:block}
-.cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-bottom:18px}
-.card{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:18px;box-shadow:0 1px 3px rgba(15,23,42,.06)}
-.card .label{font-size:12px;color:#64748b;font-weight:700}.card .value{font-size:25px;font-weight:800;margin-top:7px}
-.panel{background:#fff;border:1px solid #e2e8f0;border-radius:12px;box-shadow:0 1px 3px rgba(15,23,42,.05);margin-bottom:18px}
-.panel-head{padding:15px 17px;border-bottom:1px solid #e2e8f0;display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}
-.panel-head h3{margin:0;font-size:16px}.muted{font-size:12px;color:#64748b}
-.notice{padding:15px 17px;line-height:1.55;font-size:13px}
-.badge{display:inline-block;border-radius:999px;padding:4px 8px;font-size:11px;font-weight:800}
-.badge-blue{background:#dbeafe;color:#1d4ed8}.badge-green{background:#d1fae5;color:#047857}.badge-amber{background:#fef3c7;color:#92400e}
-.table-wrap{overflow:auto}
-table{width:100%;border-collapse:collapse;background:#fff}
-th,td{border:1px solid #94a3b8;padding:7px 8px;font-size:12px;vertical-align:middle}
-th{background:#e2e8f0;text-align:center;font-weight:800}
-td.center{text-align:center}td.right{text-align:right}.name{font-weight:700}
-.group-row td{background:#cbd5e1;font-weight:800;text-transform:uppercase}
-.edit{background:#fffbeb;min-width:55px}
-.sig-col{min-width:155px;width:155px;height:48px}
-.report-title{text-align:center;padding:14px 14px 6px}.report-title h2{font-size:16px;margin:0 0 4px}.report-title p{font-size:12px;margin:2px}
-.school-line{font-weight:800}
-.summary-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:16px}
-.rulebox{border:1px solid #cbd5e1;border-radius:10px;padding:14px;background:#f8fafc}
-.rulebox h4{margin:0 0 8px}.rulebox p{margin:4px 0;font-size:12px}
-.footer-sign{display:flex;justify-content:space-between;gap:30px;padding:58px 24px 20px;font-weight:700;font-size:12px}
-.small{font-size:11px}.nowrap{white-space:nowrap}
-input.cell-input{width:64px;border:0;background:#fff7ed;text-align:center;padding:5px}
-select.cell-select{border:0;background:#fff7ed;padding:5px}
-@media(max-width:1000px){.cards{grid-template-columns:repeat(2,1fr)}.sidebar{width:205px}.main{margin-left:205px;width:calc(100% - 205px)}}
-@media(max-width:760px){.sidebar{position:static;width:100%}.app{display:block}.main{margin:0;width:100%}.cards{grid-template-columns:1fr}.topbar{position:static}}
-@media print{
-  @page{size:A4 landscape;margin:7mm}
-  body{background:#fff}.sidebar,.topbar,.no-print{display:none!important}.main{margin:0;width:100%}.content{padding:0}
-  .tab{display:none!important}.tab.print-active{display:block!important}.panel{border:0;box-shadow:none;margin:0}
-  th,td{font-size:8.2pt;padding:4px 5px;border:1px solid #000}.report-title h2{font-size:13pt}
-  .sig-col{min-width:145px;width:145px}.footer-sign{padding-top:45px}
-}
-
-.medium-controls{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-.medium-controls label{font-size:12px;font-weight:700;color:#334155}
-.medium-controls input,.medium-controls select{height:36px;border:1px solid #cbd5e1;border-radius:7px;padding:0 10px;background:#fff}
-.medium-pages{display:grid;grid-template-columns:1fr;gap:18px}
-.a4-page{
-  width:210mm; min-height:297mm; background:#fff; margin:0 auto;
-  padding:10mm 10mm 9mm; position:relative; border:1px solid #cbd5e1;
-  box-shadow:0 2px 8px rgba(15,23,42,.08); color:#000;
-}
-.a4-page .corner-info{position:absolute;top:7mm;right:9mm;text-align:right;font-size:9.5pt;line-height:1.25;font-weight:800}
-.a4-page .qr{position:absolute;top:24mm;right:9mm;width:31mm;height:31mm;object-fit:contain;image-rendering:auto}
-.a4-page .page-heading{text-align:center;padding-top:2mm;padding-right:34mm}
-.a4-page .page-heading h2{font-size:15pt;margin:0 0 3mm;text-decoration:underline}
-.a4-page .page-heading p{font-size:10pt;margin:1.5mm 0}
-.a4-page .meta-line{display:flex;justify-content:space-between;gap:12mm;margin:5mm 0 4mm;font-size:9.5pt}
-.a4-page table{font-size:9pt;color:#000}
-.a4-page th,.a4-page td{border:1px solid #000;padding:5px 5px;color:#000}
-.a4-page th{background:#fff}
-.a4-page .days-input{
-  width:24mm;border:1px solid #000;background:#fff;color:#000;
-  text-align:center;font-weight:700;padding:4px;
-}
-.a4-page .report-footer{position:absolute;left:10mm;right:10mm;bottom:10mm;display:flex;justify-content:space-between;align-items:flex-end;font-size:9pt}
-.a4-page .report-footer .seal{margin-top:18mm}
-.a4-page .page-no{position:absolute;bottom:5mm;left:0;right:0;text-align:center;font-size:8.5pt}
-.medium-summary{margin-top:6mm;font-size:9.5pt;border:1px solid #000;padding:4mm}
-.medium-summary strong{font-size:10pt}
-@media print{
-  .medium-pages{display:block}
-  .a4-page{
-    width:210mm; height:297mm; min-height:297mm; margin:0;
-    border:0; box-shadow:none; break-after:page; page-break-after:always;
-    padding:10mm 10mm 9mm;
-  }
-  .a4-page:last-child{break-after:auto;page-break-after:auto}
-  .a4-page .days-input{border:1px solid #000;background:#fff}
-  @page{size:A4 portrait;margin:0}
-}
-
+:root{--navy:#14305e;--navy2:#0b1b3a;--gold:#b8892d;--paper:#f7f9fd;--head:#dfe7f3}
+*{box-sizing:border-box}html,body{margin:0;padding:0}body{font-family:"Segoe UI",Roboto,Arial,sans-serif;background:#e6eaf1;color:var(--navy2)}
+.toolbar{position:sticky;top:0;z-index:10;background:#fff;border-bottom:1px solid #cfd6e4;padding:10px 16px;display:flex;flex-wrap:wrap;gap:12px;align-items:center;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.toolbar h1{font-size:16px;margin:0;color:var(--navy)}.toolbar label{font-size:12px;font-weight:600;color:#475569;display:flex;flex-direction:column;gap:3px}
+.toolbar input,.toolbar button{font:inherit;font-size:13px;padding:6px 9px;border:1px solid #b9c3d6;border-radius:6px}
+.toolbar button{font-weight:700;background:var(--navy);color:#fff;border:0;padding:8px 15px;cursor:pointer}
+.cyc{font-size:13px;font-weight:600;color:var(--navy);background:#eef3fb;border:1px solid #cfd9ec;padding:6px 10px;border-radius:6px}
+.jump{display:flex;gap:6px;flex-wrap:wrap}.jump a{font-size:11.5px;text-decoration:none;color:var(--navy);background:#f1f4f9;border:1px solid #cfd6e4;padding:4px 9px;border-radius:999px}
+#pages{padding:16px 0 30px;transform-origin:top center}
+.sheet{position:relative;width:297mm;height:209.5mm;margin:0 auto 10mm;background:var(--paper);overflow:hidden;box-shadow:0 4px 18px rgba(20,48,94,.22);break-after:page;page-break-after:always;-webkit-print-color-adjust:exact;print-color-adjust:exact;
+background-image:linear-gradient(180deg,#fbfcff 0%,#f1f5fb 100%)}
+.b1{position:absolute;inset:5mm;border:1.6mm solid var(--navy)}.b2{position:absolute;inset:7.9mm;border:.35mm solid var(--gold)}.b3{position:absolute;inset:9.1mm;border:.2mm solid var(--navy)}
+.corner{position:absolute;width:11mm;height:11mm;background:var(--navy);z-index:2}.corner::after{content:"";position:absolute;left:50%;top:50%;width:4.2mm;height:4.2mm;background:var(--gold);transform:translate(-50%,-50%) rotate(45deg);box-shadow:0 0 0 .5mm var(--navy),0 0 0 .8mm var(--gold)}
+.c-tl{left:4.2mm;top:4.2mm}.c-tr{right:4.2mm;top:4.2mm}.c-bl{left:4.2mm;bottom:4.2mm}.c-br{right:4.2mm;bottom:4.2mm}
+.mid{position:absolute;width:3.4mm;height:3.4mm;background:var(--gold);transform:rotate(45deg);z-index:2;box-shadow:0 0 0 .6mm var(--paper)}.m-t{left:50%;top:3.3mm;margin-left:-1.7mm}.m-b{left:50%;bottom:3.3mm;margin-left:-1.7mm}.m-l{top:50%;left:3.3mm;margin-top:-1.7mm}.m-r{top:50%;right:3.3mm;margin-top:-1.7mm}
+.content{position:absolute;left:15mm;right:15mm;top:14mm;bottom:14mm;display:flex;flex-direction:column;z-index:1}
+.school{font-family:Georgia,"Times New Roman",serif;font-weight:700;font-size:23pt;letter-spacing:.5px;text-align:center;color:var(--navy);line-height:1.1}
+.addr{text-align:center;font-family:Georgia,serif;font-size:8.8pt;margin-top:1.6mm}.codes{text-align:center;font-size:8pt;color:var(--gold);font-weight:600;margin-top:.8mm;letter-spacing:.3px}
+.rule{height:1.2mm;margin:2.2mm 10mm 0;border-top:.35mm solid var(--gold);border-bottom:.2mm solid var(--navy)}
+.titlerow{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;margin-top:3.2mm}
+.pill{background:var(--navy);color:#fff;font-family:Georgia,serif;font-weight:700;font-size:13pt;letter-spacing:.8px;padding:1.7mm 9mm;border-radius:3mm;text-align:center;white-space:nowrap}
+.medium{justify-self:end;border:.35mm solid var(--gold);background:#fff8e6;color:var(--navy);font-weight:700;font-size:9.5pt;padding:1.5mm 5mm;border-radius:2.6mm;letter-spacing:.4px;white-space:nowrap}
+.sub{text-align:center;font-family:Georgia,serif;font-size:9.6pt;margin:2.6mm 0 3mm}.sub b{font-weight:700}.sub .sep{margin:0 3mm;color:var(--gold)}
+.cornerInfo{position:absolute;right:18mm;top:17mm;text-align:right;font-size:7.5pt;font-weight:700;color:#14305e;line-height:1.25;z-index:3}
+table.t{width:100%;border-collapse:collapse;table-layout:fixed;border:.5mm solid var(--navy)}.t th,.t td{border:.25mm solid var(--navy);padding:1.1mm 1.4mm;font-size:8pt;vertical-align:middle}.t th{background:var(--head);color:var(--navy);font-weight:700;text-align:center;line-height:1.28;font-size:7.4pt;padding:1.8mm 1mm}.t td{background:rgba(255,255,255,.74)}.t td.c{text-align:center}.t td.r{text-align:right;padding-right:3mm}.t td.nm b{display:block;font-size:8.6pt}.t td.nm span,.t td.q span{display:block;font-size:8pt}.t td.q b{font-size:8.6pt;display:block}
+table.mr tbody tr{height:13.5mm}table.cpf tbody tr{height:11mm}table.cpf td.net{font-weight:700;font-size:9pt}table.cpf td.mono{font-variant-numeric:tabular-nums;letter-spacing:.2px}table.cpf tfoot td{background:var(--head);font-weight:700;font-size:9pt;height:9mm;border-top:.5mm solid var(--navy)}
+.dayInput{width:100%;border:0;background:transparent;color:#000;text-align:center;font:inherit;font-weight:700;outline:none}.leaveInput{width:100%;border:0;background:transparent;color:#000;text-align:center;font:inherit;outline:none}.remarkInput{width:100%;border:0;background:transparent;color:#000;font:inherit;outline:none}
+.foot{margin-top:auto;display:grid;grid-template-columns:1fr 36mm 1fr;align-items:end;column-gap:8mm;padding:0 4mm}.sig{display:flex;flex-direction:column}.sig .area{height:21mm;display:flex;align-items:flex-end;font-size:9pt;line-height:1.7}.sig .line{border-top:.35mm solid var(--navy)}.sig .lab{height:14mm;padding-top:1.2mm;font-size:8.6pt;font-weight:700;text-align:center;line-height:1.35}.sig .lab .nm{font-size:8.6pt;font-family:Georgia,serif;display:block;font-weight:600}.sig .lab i{font-weight:400;font-size:7.8pt;display:block}
+.qrbox{display:flex;flex-direction:column;align-items:center}.qr{width:27mm;height:27mm;background:#fff;border:.4mm solid var(--gold);border-radius:1.6mm;padding:1.6mm;box-shadow:0 0 0 .6mm #fff;display:flex;align-items:center;justify-content:center}.qr img{width:100%;height:100%;object-fit:contain;display:block;image-rendering:auto}.qrcap{font-size:7pt;margin-top:1.2mm;text-align:center;color:#334155;height:14mm;line-height:1.3}
+.pageTag{position:absolute;right:18mm;bottom:8mm;font-size:7pt;color:#475569;font-weight:700}
+@page{size:A4 landscape;margin:0}@media print{body{background:#fff}.toolbar{display:none!important}#pages{padding:0;zoom:1!important;transform:none!important}.sheet{margin:0;box-shadow:none}.sheet:last-child{break-after:auto;page-break-after:auto}.noPrint{display:none!important}}
 </style>
 </head>
 <body>
-<div class="app">
-  <aside class="sidebar no-print">
-    <div class="brand">
-      <h1>TFHS Dashboard</h1>
-      <p>Taldangra Fulmati High School (H.S.)</p>
-      <p>Para Teacher Management</p>
-    </div>
-    <div class="nav">
-      <button class="active" data-tab="dashboard">Dashboard</button>
-      <button data-tab="database">Employee Database</button>
-      <button data-tab="report">Monthly Return</button>
-      <button data-tab="cpf">Salary / CPF</button>
-      <button data-tab="mediumReport">Medium-wise 2+2 Report</button>
-    </div>
-  </aside>
-
-  <main class="main">
-    <header class="topbar no-print">
-      <h2 id="pageTitle">Dashboard</h2>
-      <div class="controls">
-        <label for="monthSel">Salary Month</label>
-        <input id="monthSel" type="month" value="2026-10">
-        <button id="printBtn">Print Current</button>
-      </div>
-    </header>
-
-    <div class="content">
-      <section class="tab active" id="dashboard">
-        <div class="cards">
-          <div class="card"><div class="label">Active Para Teachers</div><div class="value" id="kTeachers">7</div></div>
-          <div class="card"><div class="label">Applicable Upper Primary Gross</div><div class="value" id="kGross">₹0</div></div>
-          <div class="card"><div class="label">Applicable P.Tax / Employee</div><div class="value" id="kPtax">₹0</div></div>
-          <div class="card"><div class="label">Total Net Pay</div><div class="value" id="kNet">₹0</div></div>
-        </div>
-
-        <div class="panel">
-          <div class="panel-head">
-            <div><h3>Current Payroll Rule</h3><div class="muted">Automatic month-wise application</div></div>
-            <span class="badge badge-green" id="ruleBadge">Updated</span>
-          </div>
-          <div class="summary-grid">
-            <div class="rulebox">
-              <h4>Para Teacher Remuneration</h4>
-              <p><b>Up to Sep-2026:</b> ₹15,523 per month (Upper Primary)</p>
-              <p><b>From Oct-2026:</b> ₹20,523 per month (latest revised remuneration applied in this dashboard)</p>
-            </div>
-            <div class="rulebox">
-              <h4>West Bengal Professional Tax</h4>
-              <p><b>From 01-10-2026:</b> up to ₹20,000 = NIL; ₹20,001–₹30,000 = ₹100; ₹30,001–₹50,000 = ₹140; ₹50,001–₹1,00,000 = ₹170; above ₹1,00,000 = ₹208.</p>
-              <p><b>EPF:</b> 12% of admissible gross, capped at ₹1,800.</p>
-            </div>
-          </div>
-          <div class="notice">
-            The salary table recalculates automatically when the selected month or LWP days change. Report (M) now follows the Excel-style columns only; HTML-only Aadhaar and CPF Remarks columns have been removed. The staff-signature column has been widened slightly.
-          </div>
-        </div>
-      </section>
-
-      <section class="tab" id="database">
-        <div class="panel">
-          <div class="panel-head"><h3>Master Employee Database</h3><span class="badge badge-blue">7 Active</span></div>
-          <div class="table-wrap">
-            <table>
-              <thead><tr><th>Sl</th><th>Name</th><th>D.O.B.</th><th>Qualification</th><th>Date of Joining</th><th>Medium</th><th>Bank & Branch</th><th>Account No.</th><th>IFS Code</th></tr></thead>
-              <tbody id="dbBody"></tbody>
-            </table>
-          </div>
-        </div>
-      </section>
-
-      <section class="tab" id="report">
-        <div class="panel">
-          <div class="report-title">
-            <h2>MONTHLY RETURN</h2>
-            <p class="school-line">Name of the School: TALDANGRA FULMATI HIGH SCHOOL (H.S.); P.O. & Block - TALDANGRA; Sub-Division - KHATRA; Dist. - BANKURA</p>
-            <p>Report of the Para Teacher for the Period From <b id="cycleFrom"></b> To <b id="cycleTo"></b></p>
-          </div>
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>Sl.<br>No.</th>
-                  <th>Name of the Para Teacher<br>with Date of Birth</th>
-                  <th>Qualification &<br>Date of Joining</th>
-                  <th>Working Days<br>in this Month</th>
-                  <th>Closing Days<br>in this Month</th>
-                  <th>C.L. Enjoyed<br>in this Month</th>
-                  <th>Other Leave<br>in this Month</th>
-                  <th>Total C.L. Enjoyed<br>From <span id="cumFrom1"></span><br>TO <span id="cumTo1"></span></th>
-                  <th>Total Other Leave Enjoyed<br>From <span id="cumFrom2"></span><br>TO <span id="cumTo2"></span></th>
-                  <th>Remarks</th>
-                  <th class="sig-col">Signature of Para Teacher</th>
-                </tr>
-              </thead>
-              <tbody id="reportBody"></tbody>
-            </table>
-          </div>
-          <div class="footer-sign">
-            <div>Signature of Administrator / Secretary / President</div>
-            <div style="text-align:center">PRABIR KUMAR DANGAR<br>Headmaster / T.I.C.<br>(with school seal)</div>
-          </div>
-        </div>
-      </section>
-
-      
-<section class="tab" id="mediumReport">
-  <div class="panel no-print">
-    <div class="panel-head">
-      <div>
-        <h3>Medium-wise 2+2 = 4 Report</h3>
-        <div class="muted">Four separate A4 pages: 2 Bengali Medium + 2 Santali Medium. No. of Days is manually entered.</div>
-      </div>
-      <div class="medium-controls">
-        <label>Month</label>
-        <input id="mediumMonth" type="month" value="2026-10">
-        <label>Bengali Days</label>
-        <input id="bengaliDays" type="number" min="0" value="0">
-        <label>Santali Days</label>
-        <input id="santaliDays" type="number" min="0" value="0">
-        <button class="primary" id="printMediumBtn">Print 4 A4 Pages</button>
-      </div>
-    </div>
-    <div class="notice">
-      The original uploaded QR image is embedded directly in all four pages so the printed QR remains the same scanable image. Medium name and place are shown in the corner of every page. Days remain black and editable.
-    </div>
-  </div>
-  <div id="mediumPages" class="medium-pages"></div>
-</section>
-
-      <section class="tab" id="cpf">
-        <div class="panel">
-          <div class="report-title">
-            <h2>SALARY STATEMENT — PARA TEACHER (UPPER PRIMARY)</h2>
-            <p class="school-line">Name of the School: TALDANGRA FULMATI HIGH SCHOOL (H.S.)</p>
-            <p>Name of Circle: TALDANGRA &nbsp; | &nbsp; Salary Statement for the Month of <b id="salaryMonthLabel"></b></p>
-          </div>
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>Sl.<br>No.</th>
-                  <th>Name of Employee</th>
-                  <th>Bank & Branch Name</th>
-                  <th>Account No.</th>
-                  <th>IFS Code</th>
-                  <th>Nos. of Days<br>Leave Without Pay</th>
-                  <th>Gross Consolidated Salary<br>for the Month</th>
-                  <th>P.TAX</th>
-                  <th>EPF Deducted<br>12% of Gross Salary but Not More Than ₹1,800</th>
-                  <th>Net Salary<br>for the Month</th>
-                </tr>
-              </thead>
-              <tbody id="cpfBody"></tbody>
-              <tfoot id="cpfFoot"></tfoot>
-            </table>
-          </div>
-          <div class="footer-sign">
-            <div>Signature of Administrator / Secretary / President</div>
-            <div style="text-align:center">PRABIR KUMAR DANGAR<br>Headmaster / T.I.C.<br>(with school seal)</div>
-          </div>
-        </div>
-      </section>
-    </div>
-  </main>
+<div class="toolbar">
+  <h1>TFHS Para Teacher Reports – Medium Wise 2+2 = 4</h1>
+  <label>Salary month / period ends on 10th<input type="month" id="endMonth"></label>
+  <label>Bengali Working/Closing Days<input type="number" id="bDays" value="0" min="0"></label>
+  <label>Santali Working/Closing Days<input type="number" id="sDays" value="0" min="0"></label>
+  <button onclick="window.print()">Print / Save PDF (4 A4 Pages)</button>
+  <div class="cyc" id="cycLabel"></div>
+  <div class="jump"><a href="#p1">1 · Monthly – Bengali</a><a href="#p2">2 · Monthly – Santali</a><a href="#p3">3 · CPF – Bengali</a><a href="#p4">4 · CPF – Santali</a></div>
 </div>
+<div id="pages"></div>
 
 <script>
-const employees = [
-  {id:1,name:"BHARATI DEY",dob:"12.07.1973",qual:"B.A.(GEO)",doj:"19.10.2004",medium:"Bengali Medium",bank:"SBI TALDANGRA",acc:"32171567657",ifsc:"SBIN0012397"},
-  {id:2,name:"RINKU BHUIN",dob:"01.03.1980",qual:"B.A.(Beng)",doj:"19.10.2004",medium:"Bengali Medium",bank:"SBI TALDANGRA",acc:"32171603530",ifsc:"SBIN0012397"},
-  {id:3,name:"BISWARUP DEY",dob:"12.04.1987",qual:"B.A.(Eng)",doj:"17.12.2008",medium:"Bengali Medium",bank:"SBI TALDANGRA",acc:"32169323535",ifsc:"SBIN0012397"},
-  {id:4,name:"DOLI MONDAL",dob:"17.01.1975",qual:"B.Sc.(Pure Sc.)",doj:"1st: 03.01.2007; 2nd: 02.02.2010",medium:"Bengali Medium",bank:"SBI TALDANGRA",acc:"32171877251",ifsc:"SBIN0012397"},
-  {id:5,name:"GANESH MANDI",dob:"04.01.1993",qual:"B.A.(Hons)",doj:"02.03.2015",medium:"Santali Medium",bank:"UBI SIMLAPAL",acc:"0448010233552",ifsc:"PUNB0044820"},
-  {id:6,name:"BIKASH BASKEY",dob:"18.10.1980",qual:"B.A.(Pass)",doj:"01.03.2016",medium:"Santali Medium",bank:"SBI TALDANGRA",acc:"35720612096",ifsc:"SBIN0012397"},
-  {id:7,name:"LAKSHMI SAREN",dob:"25.02.1989",qual:"B.A.(Pass)",doj:"01.03.2016",medium:"Santali Medium",bank:"SBI TALDANGRA",acc:"35702689775",ifsc:"SBIN0012397"}
-];
-
-const monthSel = document.getElementById('monthSel');
-const lwpState = Object.fromEntries(employees.map(e => [e.id,0]));
-
-function money(n){return "₹"+Math.round(n).toLocaleString("en-IN")}
-function pad(n){return String(n).padStart(2,"0")}
-function fmtDate(d){return `${pad(d.getDate())}-${pad(d.getMonth()+1)}-${d.getFullYear()}`}
-function monthName(y,m){return new Date(y,m-1,1).toLocaleString("en-IN",{month:"long",year:"numeric"})}
-function daysInMonth(y,m){return new Date(y,m,0).getDate()}
-
-function salaryRate(y,m){
-  // Latest revised Upper Primary Para Teacher remuneration applied from 01-10-2026.
-  return (y>2026 || (y===2026 && m>=10)) ? 20523 : 15523;
-}
-function ptaxFor(gross,y,m){
-  if(y>2026 || (y===2026 && m>=10)){
-    if(gross<=20000) return 0;
-    if(gross<=30000) return 100;
-    if(gross<=50000) return 140;
-    if(gross<=100000) return 170;
-    return 208;
-  }
-  // Previous employee slab used before 01-10-2026.
-  if(gross<=10000) return 0;
-  if(gross<=15000) return 110;
-  if(gross<=25000) return 130;
-  if(gross<=40000) return 150;
-  return 200;
-}
-function epfFor(gross){return Math.min(1800,Math.round(gross*0.12))}
-
-function renderDatabase(){
-  document.getElementById('dbBody').innerHTML = employees.map(e=>`
-    <tr>
-      <td class="center">${e.id}</td><td class="name">${e.name}</td><td class="center">${e.dob}</td>
-      <td>${e.qual}</td><td>${e.doj}</td><td>${e.medium}</td><td>${e.bank}</td>
-      <td class="nowrap">${e.acc}</td><td class="nowrap">${e.ifsc}</td>
-    </tr>`).join("");
-}
-
-function reportRow(e){
-  return `<tr>
-    <td class="center">${e.id}</td>
-    <td><span class="name">${e.name}</span><br><span class="small">${e.dob}</span></td>
-    <td>${e.qual}<br><span class="small">${e.doj}</span></td>
-    <td class="center edit" contenteditable="true">22</td>
-    <td class="center edit" contenteditable="true">8</td>
-    <td class="center edit" contenteditable="true">0</td>
-    <td class="center edit" contenteditable="true">0</td>
-    <td class="center edit" contenteditable="true">0</td>
-    <td class="center edit" contenteditable="true">0</td>
-    <td class="edit" contenteditable="true"></td>
-    <td class="sig-col"></td>
-  </tr>`;
-}
-function renderReport(){
-  const [y,m] = monthSel.value.split("-").map(Number);
-  const from = new Date(y,m-2,11);
-  const to = new Date(y,m-1,10);
-  document.getElementById('cycleFrom').textContent=fmtDate(from);
-  document.getElementById('cycleTo').textContent=fmtDate(to);
-  ["cumFrom1","cumFrom2"].forEach(id=>document.getElementById(id).textContent=`11-01-${y}`);
-  ["cumTo1","cumTo2"].forEach(id=>document.getElementById(id).textContent=fmtDate(to));
-
-  const bengali=employees.filter(e=>e.medium==="Bengali Medium");
-  const santali=employees.filter(e=>e.medium==="Santali Medium");
-  document.getElementById('reportBody').innerHTML =
-    `<tr class="group-row"><td colspan="11">BENGALI MEDIUM</td></tr>`+
-    bengali.map(reportRow).join("")+
-    `<tr class="group-row"><td colspan="11">SANTALI MEDIUM</td></tr>`+
-    santali.map(reportRow).join("");
-}
-
-function renderCPF(){
-  const [y,m] = monthSel.value.split("-").map(Number);
-  const rate=salaryRate(y,m), dim=daysInMonth(y,m);
-  let tg=0,tp=0,te=0,tn=0;
-  document.getElementById('salaryMonthLabel').textContent=monthName(y,m);
-  const rows=employees.map(e=>{
-    const lwp=Math.max(0,Math.min(dim,Number(lwpState[e.id]||0)));
-    const gross=Math.round(rate*(dim-lwp)/dim);
-    const pt=ptaxFor(gross,y,m);
-    const epf=epfFor(gross);
-    const net=gross-pt-epf;
-    tg+=gross;tp+=pt;te+=epf;tn+=net;
-    return `<tr>
-      <td class="center">${e.id}</td><td class="name">${e.name}</td><td>${e.bank}</td>
-      <td class="nowrap">${e.acc}</td><td class="nowrap">${e.ifsc}</td>
-      <td class="center"><input class="cell-input" type="number" min="0" max="${dim}" value="${lwp}" data-lwp="${e.id}"></td>
-      <td class="right">${money(gross)}</td><td class="right">${money(pt)}</td>
-      <td class="right">${money(epf)}</td><td class="right"><b>${money(net)}</b></td>
-    </tr>`;
-  }).join("");
-  document.getElementById('cpfBody').innerHTML=rows;
-  document.getElementById('cpfFoot').innerHTML=`<tr>
-    <th colspan="6" style="text-align:right">TOTAL</th><th class="right">${money(tg)}</th>
-    <th class="right">${money(tp)}</th><th class="right">${money(te)}</th><th class="right">${money(tn)}</th>
-  </tr>`;
-
-  document.querySelectorAll("[data-lwp]").forEach(inp=>inp.addEventListener("input",ev=>{
-    lwpState[ev.target.dataset.lwp]=ev.target.value;
-    renderCPF(); renderDashboard();
-  }));
-}
-
-function renderDashboard(){
-  const [y,m] = monthSel.value.split("-").map(Number);
-  const rate=salaryRate(y,m);
-  const pt=ptaxFor(rate,y,m);
-  const epf=epfFor(rate);
-  const net=rate-pt-epf;
-  document.getElementById('kTeachers').textContent=employees.length;
-  document.getElementById('kGross').textContent=money(rate);
-  document.getElementById('kPtax').textContent=money(pt);
-  document.getElementById('kNet').textContent=money(net*employees.length);
-}
-
-
-const exactQR = "data:image/png;base64,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XAEAAKTkCgAAICVXAAAAKbkCAABIfYxUvfdWHjvnND7Wq3cIvUV7jYy0V++8bV7TzSdr8w7pNXJOH6C4Q95z9xb1TogL/7fqXYUHFO21eemLHjAE3ysAAICUXAEAAKTkCgAAICVXAAAAKbkCAABIyRUAAEBKrgAAAFJyBQAAkJIrAACAlFwBAACk5AoAACAlVwAAAKlz7+1s7pzG1op6h1BUHOnmvvUqjnSkb0UjQxg5gCPbstcDNlKvByx97xDe01qvkb695521eU03e8DJKnrAfvO9AgAASMkVAABASq4AAABScgUAAJCSKwAAgJRcAQAApOQKAAAgJVcAAAApuQIAAEjJFQAAQEquAAAAUnIFAACQOvfegarnfH/RXiPzNmJksYrT29u3B6zpyIS8p+iIB4y0OITevm1+y/Ru8vccmc1XzUhrm21erN6iRe85zr5XAAAAKbkCAABIyRUAAEBKrgAAAFJyBQAAkJIrAACAlFwBAACk5AoAACAlVwAAACm5AgAASMkVAABASq4AAABSH9Md+D733sbWzjlri44ojrQ4hN7p7Z23kaUfMbLfNp+skf02crKKin3bPG9F7zn1RSNHZvNZKBrZIZt37+aim9+ARSPT63sFAACQkisAAICUXAEAAKTkCgAAICVXAAAAKbkCAABIyRUAAEBKrgAAAFJyBQAAkJIrAACAlFwBAACk5AoAACD10dvcOafy2L23t25FsW9FxSFsnpCRokW9fds80qLejTTS2ojNI31A0ZG+bbZ5sUb09u0B07v5RiraPIQH/HLY/K4v8r0CAABIyRUAAEBKrgAAAFJyBQAAkJIrAACAlFwBAACk5AoAACAlVwAAACm5AgAASMkVAABASq4AAABScgUAAJA6997pPvyjc07lsd4hFIu+R3F6e+ett+jIEIre07eR1jbbPNLN+63X5jtE0a8Vfc/lsNnmV9uIzRPSe2R8rwAAAFJyBQAAkJIrAACAlFwBAACk5AoAACAlVwAAACm5AgAASMkVAABASq4AAABScgUAAJCSKwAAgJRcAQAApM69d7oPu5xzKo/1zluxaNFI3x5QdMR7RtrrPUdmpLVeI7t387xtXvrNE1L0nk1e9IDFGtnkRe8pWuR7BQAAkJIrAACAlFwBAACk5AoAACAlVwAAACm5AgAASMkVAABASq4AAABScgUAAJCSKwAAgJRcAQAApOQKAAAgde69nc2dU3msWLTYWpGR/taim/UufdEDdm9R7357z2JtnpAid8jXbL4cija/AXttPs6b75DNm/wBi7V56X2vAAAAUnIFAACQkisAAICUXAEAAKTkCgAAICVXAAAAKbkCAABIyRUAAEBKrgAAAFJyBQAAkJIrAACAlFwBAACkPqY78G/uvd9f9JxTeazYt97Weo0ULdo8b0W9fXvAhGy2ed6KS1+0+eJ6wCZ/zxB6W9u8kXonpOgBG6l3eh+wkTYvVi/fKwAAgJRcAQAApOQKAAAgJVcAAAApuQIAAEjJFQAAQEquAAAAUnIFAACQkisAAICUXAEAAKTkCgAAICVXAAAAqY/e5u69vQ02OudUHisOobe1omLRopG+PWBCRka6We8q9BYdWYXN27K3aJG792utbb5DHnCyijavQtHIAew1cjkUWxs5zpu3pe8VAABASq4AAABScgUAAJCSKwAAgJRcAQAApOQKAAAgJVcAAAApuQIAAEjJFQAAQEquAAAAUnIFAACQkisAAIDUufcOVD3n+4tuHmlv33qnV99+a9FeDxjCZiO79wFFez3gRtp8Tl3RX7P5V80DfocUPWC/bT6ARb5XAAAAKbkCAABIyRUAAEBKrgAAAFJyBQAAkJIrAACAlFwBAACk5AoAACAlVwAAACm5AgAASMkVAABASq4AAABS597b2dw5lcdGij5Acd6swie989ZbtFfv0r9nTR9wFjZv8pFVGDFyADfPmzvkazYv/QPuN0v/W/leAQAApOQKAAAgJVcAAAApuQIAAEjJFQAAQEquAAAAUnIFAACQkisAAICUXAEAAKTkCgAAICVXAAAAKbkCAABIffQ2d++tPHbOaWytqLe1ouJI36N3FXqn9z07ZOQA8knvbdlbtKh3I42MdPNZ2HxbFm2+VN+ze3uLbn4vPOBHY6+R+833CgAAICVXAAAAKbkCAABIyRUAAEBKrgAAAFJyBQAAkJIrAACAlFwBAACk5AoAACAlVwAAACm5AgAASMkVAABA6tx7O5s7p/LYSNH3KE5v77wp+ryim71nFRT9WlFvma/ZPG8jO2Rkv/V6zyq8x+b95nsFAACQkisAAICUXAEAAKTkCgAAICVXAAAAKbkCAABIyRUAAEBKrgAAAFJyBQAAkJIrAACAlFwBAACk5AoAACB17r3TffhH55zKY8Uh9LbWq9i3ot4hjMxb74QUPWDeit7Tt5HWijZPb5EhfPKekzVSdPPSFz3g1TbCydpQtMj3CgAAICVXAAAAKbkCAABIyRUAAEBKrgAAAFJyBQAAkJIrAACAlFwBAACk5AoAACAlVwAAACm5AgAASMkVAABA6qO3uXNOY2v33sbWehVH2juEkQkpFu1d+qKRCRlZ+pHpLRqZkBG9Z6F33kZae4DNI33AVfOAN+DmV9vIVVPkZH1N77yNjNT3CgAAICVXAAAAKbkCAABIyRUAAEBKrgAAAFJyBQAAkJIrAACAlFwBAACk5AoAACAlVwAAACm5AgAASMkVAABA6mO6A/9V997pLvyjc850F1Kbp7eouAq9Iy221rtDHrBYRZtP1sjSFz1gv43M2wNO1sjS9969vauw+Q4p2rymvUU323zh+14BAACk5AoAACAlVwAAACm5AgAASMkVAABASq4AAABScgUAAJCSKwAAgJRcAQAApOQKAAAgJVcAAAApuQIAAEide+90H77JOWe6C6niYo2MdHPfevUemeKEjBR9gN5t+YClH/GAG8n99ol5+xoT8okJ+WRkQnrfMr5XAAAAKbkCAABIyRUAAEBKrgAAAFJyBQAAkJIrAACAlFwBAACk5AoAACAlVwAAACm5AgAASMkVAABASq4AAABS59473YfUOef7ixbnbaRvRb1DsJE+6Z2Q3lWwLb9mZIdsPoCb796iB5yFos0jHbH5iu61+eJ6QNERm0fqewUAAJCSKwAAgJRcAQAApOQKAAAgJVcAAAApuQIAAEjJFQAAQEquAAAAUnIFAACQkisAAICUXAEAAKTkCgAAIPXR29w5p/LYvbextaJi0aLekfYWHWltRO8qbF6szUfmARvpPUYurpGNNLIte0f6njfg5vdpb9FeI6uwed4e8BLvbW3kGvS9AgAASMkVAABASq4AAABScgUAAJCSKwAAgJRcAQAApOQKAAAgJVcAAAApuQIAAEjJFQAAQEquAAAAUnIFAACQ+uht7t67trWic07lsWLfelvr1TuEXg8ounl6R/Zb0eYD2Ft0ZOlHjFyDmzd5b9/cIZ+M3CG9eotufrWNnIWRq+Y959T3CgAAICVXAAAAKbkCAABIyRUAAEBKrgAAAFJyBQAAkJIrAACAlFwBAACk5AoAACAlVwAAACm5AgAASMkV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HUJv0ZGN1Nu3kcUambcHLFavB5zTzXonZOQ4F7lDNhQd2W9FI5dD7xA2/2h8zwEs8r0CAABIyRUAAEBKrgAAAFJyBQAAkJIrAACAlFwBAACk5AoAACAlVwAAACm5AgAASMkVAABASq4AAABScgUAAJD6GKl67x2p22hkCOec7y/a6wFLX1Qcae+a9rb2nk3eu1i98zayQ0YmpNjaSNFeTtYnIxfX5vfp5h2y+SVu3jbwvQIAAEjJFQAAQEquAAAAUnIFAACQkisAAICUXAEAAKTkCgAAICVXAAAAKbkCAABIyRUAAEBKrgAAAFJyBQAAkProbe6c09vgf9299/tbK65Cb996l763b716p3fzKvQW3bymD7B5FTa/F3ov1V4PuMl7PWCxit4z0hEPuC03v099rwAAAFJyBQAAkJIrAACAlFwBAACk5AoAACAlVwAAACm5AgAASMkVAABASq4AAABScgUAAJCSKwAAgJRcAQAApD5Gqv7xxx8/f/4cKd3i169ff//993Qv/tG9t/LYOaextd6ivX0rtjait28jE1IsutnIfuudt819K+otuvnUF21ehd6bvGjzxbX5DnnAvPXa/M7a3LeimVzx8+fPv/76a6R0iz///HNzrgAAgG/mf1AAAEBKrgAAAFJyBQAAkJIrAACAlFwBAACk5AoAACAlVwAAACm5AgAASMkVAABASq4AAABScgUAAJD6mO7AvznnfH/Re+9/vejIvPUaWYWiB+yQogdspBG9i1VsrbhYI30r6t1vm4/M5pP1ntdu75HZfLJ6jczbA05Wr5ELv8j3CgAAICVXAAAAKbkCAABIyRUAAEBKrgAAAFJyBQAAkJIrAACAlFwBAACk5AoAACAlVwAAACm5AgAASMkVAABA6mO6A/z48ePHOafy2L33d/fk/xvp23smpPjY5gkpGtkhxcd6ixb1TkjvRtps80hHjvPmbdl7Th8wvUWbb/IRm1+UI2+ZzTvE9woAACAlVwAAACm5AgAASMkVAABASq4AAABScgUAAJCSKwAAgJRcAQAApOQKAAAgJVcAAAApuQIAAEjJFQAAQOpjugP0u/dOd+EfjfStWPScs7a1zUMo6u1bUW9rm3dI0QMmpNfmCeGTkR1SNLKRih7w+tj8otx84Y8U9b0CAABIyRUAAEBKrgAAAFJyBQAAkJIrAACAlFwBAACk5AoAACAlVwAAACm5AgAASMkVAABASq4AAABScgUAAJD6mO7Av7n3Tnfhm2we6TmnsbXiSItFe1srGmmtd4dsLlo0spE2797Nd8iIkcvhAUV7+9brPSMt2nyHjNxIm9f0AS/xIt8rAACAlFwBAACk5AoAACAlVwAAACm5AgAASMkVAABASq4AAABScgUAAJCSKwAAgJRcAQAApOQKAAAg9TFS9devX3/++edI6Ra/fv2a7gIAACxy7r2dzZ3T2NoDFKe3d95617Ro8xCKfds8byN96/WAHdKr93J4wO4d2SEPeGeNbKQHbMuiB+zeBwyh1+bpfcAB9D8oAAAgJVcAAAApuQIAAEjJFQAAQEquAAAAUnIFAACQkisAAICUXAEAAKTkCgAAICVXAAAAKbkCAABIyRUAAEDq3Hun+wAAAPy3+V4BAACk5AoAACAlVwAAACm5AgAASMkVAABASq4AAABScgUAAJCSKwAAgJRcAQAApOQKAAAgJVcAAAApuQIAAEjJFQAAQEquAAAAUnIFAACQkisAAICUXAEAAKTkCgAAICVXAAAAKbkCAABIyRUAAEBKrgAAAFJyBQAAkJIrAACAlFwBAACk/heBbHBiwR9hQgAAAABJRU5ErkJggg==";
-const mediumReportState = {
-  month: "2026-10",
-  bengaliDays: 0,
-  santaliDays: 0
-};
-
-function monthLabelFromValue(v){
-  const [y,m] = v.split("-").map(Number);
-  return new Date(y, m-1, 1).toLocaleString("en-IN", {month:"long", year:"numeric"});
-}
-
-function mediumPageHtml(medium, copyNo, pageNo, days){
-  const list = employees.filter(e => e.medium === medium);
-  const mediumName = medium === "Bengali Medium" ? "BENGALI MEDIUM" : "SANTALI MEDIUM";
-  const rows = list.map((e,i)=>`
-    <tr>
-      <td style="text-align:center">${i+1}</td>
-      <td><b>${e.name}</b></td>
-      <td style="text-align:center">${e.dob}</td>
-      <td>${e.qual}</td>
-      <td style="text-align:center">${e.doj}</td>
-      <td style="text-align:center"><input class="days-input" type="number" min="0" value="${days}" data-medium-days="${medium}"></td>
-    </tr>`).join("");
-
-  return `
-  <div class="a4-page" data-medium-page="${medium}" data-copy="${copyNo}">
-    <div class="corner-info">
-      ${mediumName}<br>
-      TALDANGRA FULMATI HIGH SCHOOL (H.S.)<br>
-      TALDANGRA, BANKURA
-    </div>
-    <img class="qr" src="${exactQR}" alt="QR Code">
-    <div class="page-heading">
-      <h2>MEDIUM-WISE PARA TEACHER REPORT</h2>
-      <p><b>${mediumName}</b></p>
-      <p>TALDANGRA FULMATI HIGH SCHOOL (H.S.)</p>
-    </div>
-    <div class="meta-line">
-      <div>Report Month: <b>${monthLabelFromValue(mediumReportState.month)}</b></div>
-      <div>Copy: <b>${copyNo} of 2</b></div>
-    </div>
-    <table>
-      <thead>
-        <tr>
-          <th style="width:10mm">Sl.</th>
-          <th>Name of Para Teacher</th>
-          <th style="width:28mm">D.O.B.</th>
-          <th>Qualification</th>
-          <th style="width:28mm">Date of Joining</th>
-          <th style="width:35mm">No. of Days</th>
-        </tr>
-      </thead>
-      <tbody>${rows}</tbody>
-    </table>
-    <div class="medium-summary">
-      <b>Medium:</b> ${mediumName} &nbsp;&nbsp; | &nbsp;&nbsp;
-      <b>Place:</b> TALDANGRA, BANKURA &nbsp;&nbsp; | &nbsp;&nbsp;
-      <b>No. of Days:</b> ${days}
-    </div>
-    <div class="report-footer">
-      <div class="seal">School Seal</div>
-      <div style="text-align:center">Signature of Administrator / Headmaster / T.I.C.<br><br><b>PRABIR KUMAR DANGAR</b></div>
-    </div>
-    <div class="page-no">Page ${pageNo} of 4</div>
-  </div>`;
-}
-
-function renderMediumReport(){
-  const b = Math.max(0, Number(document.getElementById("bengaliDays").value || 0));
-  const s = Math.max(0, Number(document.getElementById("santaliDays").value || 0));
-  mediumReportState.month = document.getElementById("mediumMonth").value || "2026-10";
-  mediumReportState.bengaliDays = b;
-  mediumReportState.santaliDays = s;
-
-  document.getElementById("mediumPages").innerHTML =
-    mediumPageHtml("Bengali Medium",1,1,b) +
-    mediumPageHtml("Bengali Medium",2,2,b) +
-    mediumPageHtml("Santali Medium",1,3,s) +
-    mediumPageHtml("Santali Medium",2,4,s);
-
-  document.querySelectorAll("[data-medium-days]").forEach(inp => {
-    inp.addEventListener("input", e => {
-      const med = e.target.dataset.mediumDays;
-      const val = Math.max(0, Number(e.target.value || 0));
-      if(med === "Bengali Medium") document.getElementById("bengaliDays").value = val;
-      if(med === "Santali Medium") document.getElementById("santaliDays").value = val;
-      renderMediumReport();
-    });
-  });
-}
-
-["mediumMonth","bengaliDays","santaliDays"].forEach(id => {
-  document.getElementById(id).addEventListener("input", renderMediumReport);
-});
-document.getElementById("printMediumBtn").addEventListener("click", () => {
-  document.querySelectorAll(".tab").forEach(t => t.classList.remove("print-active"));
-  document.getElementById("mediumReport").classList.add("print-active");
-  renderMediumReport();
-  window.print();
-});
-
-function renderAll(){renderDatabase();renderReport();renderCPF();renderDashboard();renderMediumReport()}
-monthSel.addEventListener("change",renderAll);
-
-document.querySelectorAll(".nav button").forEach(btn=>btn.addEventListener("click",()=>{
-  document.querySelectorAll(".nav button").forEach(b=>b.classList.remove("active"));
-  btn.classList.add("active");
-  document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
-  document.getElementById(btn.dataset.tab).classList.add("active");
-  const names={dashboard:"Dashboard",database:"Employee Database",report:"Monthly Return",cpf:"Salary / CPF",mediumReport:"Medium-wise 2+2 Report"};
-  document.getElementById("pageTitle").textContent=names[btn.dataset.tab];
-}));
-
-document.getElementById("printBtn").addEventListener("click",()=>{
-  document.querySelectorAll(".tab").forEach(t=>t.classList.remove("print-active"));
-  const active=document.querySelector(".tab.active");
-  active.classList.add("print-active");
-  window.print();
-});
-
-renderAll();
+const SCHOOL={name:"TALDANGRA FULMATI HIGH SCHOOL (H.S.)",addr:"P.O. & Block - Taldangra, Sub-Division - Khatra, District - Bankura, West Bengal - 722152",codes:"HS Code 114071 &nbsp;|&nbsp; Index No. U1-083 &nbsp;|&nbsp; DISE 19132104401",circle:"TALDANGRA",place:"Taldangra",hm:"PRABIR KUMAR DANGAR"};
+const QR="data:image/png;base64,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XAEAAKTkCgAAICVXAAAAKbkCAABIfYxUvfdWHjvnND7Wq3cIvUV7jYy0V++8bV7TzSdr8w7pNXJOH6C4Q95z9xb1TogL/7fqXYUHFO21eemLHjAE3ysAAICUXAEAAKTkCgAAICVXAAAAKbkCAABIyRUAAEBKrgAAAFJyBQAAkJIrAACAlFwBAACk5AoAACAlVwAAAKlz7+1s7pzG1op6h1BUHOnmvvUqjnSkb0UjQxg5gCPbstcDNlKvByx97xDe01qvkb695521eU03e8DJKnrAfvO9AgAASMkVAABASq4AAABScgUAAJCSKwAAgJRcAQAApOQKAAAgJVcAAAApuQIAAEjJFQAAQEquAAAAUnIFAACQOvfegarnfH/RXiPzNmJksYrT29u3B6zpyIS8p+iIB4y0OITevm1+y/Ru8vccmc1XzUhrm21erN6iRe85zr5XAAAAKbkCAABIyRUAAEBKrgAAAFJyBQAAkJIrAACAlFwBAACk5AoAACAlVwAAACm5AgAASMkVAABASq4AAABSH9Md+D733sbWzjlri44ojrQ4hN7p7Z23kaUfMbLfNp+skf02crKKin3bPG9F7zn1RSNHZvNZKBrZIZt37+aim9+ARSPT63sFAACQkisAAICUXAEAAKTkCgAAICVXAAAAKbkCAABIyRUAAEBKrgAAAFJyBQAAkJIrAACAlFwBAACk5AoAACD10dvcOafy2L23t25FsW9FxSFsnpCRokW9fds80qLejTTS2ojNI31A0ZG+bbZ5sUb09u0B07v5RiraPIQH/HLY/K4v8r0CAABIyRUAAEBKrgAAAFJyBQAAkJIrAACAlFwBAACk5AoAACAlVwAAACm5AgAASMkVAABASq4AAABScgUAAJA6997pPvyjc07lsd4hFIu+R3F6e+ett+jIEIre07eR1jbbPNLN+63X5jtE0a8Vfc/lsNnmV9uIzRPSe2R8rwAAAFJyBQAAkJIrAACAlFwBAACk5AoAACAlVwAAACm5AgAASMkVAABASq4AAABScgUAAJCSKwAAgJRcAQAApM69d7oPu5xzKo/1zluxaNFI3x5QdMR7RtrrPUdmpLVeI7t387xtXvrNE1L0nk1e9IDFGtnkRe8pWuR7BQAAkJIrAACAlFwBAACk5AoAACAlVwAAACm5AgAASMkVAABASq4AAABScgUAAJCSKwAAgJRcAQAApOQKAAAgde69nc2dU3msWLTYWpGR/taim/UufdEDdm9R7357z2JtnpAid8jXbL4cija/AXttPs6b75DNm/wBi7V56X2vAAAAUnIFAACQkisAAICUXAEAAKTkCgAAICVXAAAAKbkCAABIyRUAAEBKrgAAAFJyBQAAkJIrAACAlFwBAACkPqY78G/uvd9f9JxTeazYt97Weo0ULdo8b0W9fXvAhGy2ed6KS1+0+eJ6wCZ/zxB6W9u8kXonpOgBG6l3eh+wkTYvVi/fKwAAgJRcAQAApOQKAAAgJVcAAAApuQIAAEjJFQAAQEquAAAAUnIFAACQkisAAICUXAEAAKTkCgAAICVXAAAAqY/e5u69vQ02OudUHisOobe1omLRopG+PWBCRka6We8q9BYdWYXN27K3aJG792utbb5DHnCyijavQtHIAew1cjkUWxs5zpu3pe8VAABASq4AAABScgUAAJCSKwAAgJRcAQAApOQKAAAgJVcAAAApuQIAAEjJFQAAQEquAAAAUnIFAACQkisAAIDUufcOVD3n+4tuHmlv33qnV99+a9FeDxjCZiO79wFFez3gRtp8Tl3RX7P5V80DfocUPWC/bT6ARb5XAAAAKbkCAABIyRUAAEBKrgAAAFJyBQAAkJIrAACAlFwBAACk5AoAACAlVwAAACm5AgAASMkVAABASq4AAABS597b2dw5lcdGij5Acd6swie989ZbtFfv0r9nTR9wFjZv8pFVGDFyADfPmzvkazYv/QPuN0v/W/leAQAApOQKAAAgJVcAAAApuQIAAEjJFQAAQEquAAAAUnIFAACQkisAAICUXAEAAKTkCgAAICVXAAAAKbkCAABIffQ2d++tPHbOaWytqLe1ouJI36N3FXqn9z07ZOQA8knvbdlbtKh3I42MdPNZ2HxbFm2+VN+ze3uLbn4vPOBHY6+R+833CgAAICVXAAAAKbkCAABIyRUAAEBKrgAAAFJyBQAAkJIrAACAlFwBAACk5AoAACAlVwAAACm5AgAASMkVAABA6tx7O5s7p/LYSNH3KE5v77wp+ryim71nFRT9WlFvma/ZPG8jO2Rkv/V6zyq8x+b95nsFAACQkisAAICUXAEAAKTkCgAAICVXAAAAKbkCAABIyRUAAEBKrgAAAFJyBQAAkJIrAACAlFwBAACk5AoAACB17r3TffhH55zKY8Uh9LbWq9i3ot4hjMxb74QUPWDeit7Tt5HWijZPb5EhfPKekzVSdPPSFz3g1TbCydpQtMj3CgAAICVXAAAAKbkCAABIyRUAAEBKrgAAAFJyBQAAkJIrAACAlFwBAACk5AoAACAlVwAAACm5AgAASMkVAABA6qO3uXNOY2v33sbWehVH2juEkQkpFu1d+qKRCRlZ+pHpLRqZkBG9Z6F33kZae4DNI33AVfOAN+DmV9vIVVPkZH1N77yNjNT3CgAAICVXAAAAKbkCAABIyRUAAEBKrgAAAFJyBQAAkJIrAACAlFwBAACk5AoAACAlVwAAACm5AgAASMkVAABA6mO6A/9V997pLvyjc850F1Kbp7eouAq9Iy221rtDHrBYRZtP1sjSFz1gv43M2wNO1sjS9969vauw+Q4p2rymvUU323zh+14BAACk5AoAACAlVwAAACm5AgAASMkVAABASq4AAABScgUAAJCSKwAAgJRcAQAApOQKAAAgJVcAAAApuQIAAEide+90H77JOWe6C6niYo2MdHPfevUemeKEjBR9gN5t+YClH/GAG8n99ol5+xoT8okJ+WRkQnrfMr5XAAAAKbkCAABIyRUAAEBKrgAAAFJyBQAAkJIrAACAlFwBAACk5AoAACAlVwAAACm5AgAASMkVAABASq4AAABS59473YfUOef7ixbnbaRvRb1DsJE+6Z2Q3lWwLb9mZIdsPoCb796iB5yFos0jHbH5iu61+eJ6QNERm0fqewUAAJCSKwAAgJRcAQAApOQKAAAgJVcAAAApuQIAAEjJFQAAQEquAAAAUnIFAACQkisAAICUXAEAAKTkCgAAIPXR29w5p/LYvbextaJi0aLekfYWHWltRO8qbF6szUfmARvpPUYurpGNNLIte0f6njfg5vdpb9FeI6uwed4e8BLvbW3kGvS9AgAASMkVAABASq4AAABScgUAAJCSKwAAgJRcAQAApOQKAAAgJVcAAAApuQIAAEjJFQAAQEquAAAAUnIFAACQ+uht7t67trWic07lsWLfelvr1TuEXg8ounl6R/Zb0eYD2Ft0ZOlHjFyDmzd5b9/cIZ+M3CG9eotufrWNnIWRq+Y959T3CgAAICVXAAAAKbkCAABIyRUAAEBKrgAAAFJyBQAAkJIrAACAlFwBAACk5AoAACAlVwAAACm5AgAASMkV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HUJv0ZGN1Nu3kcUambcHLFavB5zTzXonZOQ4F7lDNhQd2W9FI5dD7xA2/2h8zwEs8r0CAABIyRUAAEBKrgAAAFJyBQAAkJIrAACAlFwBAACk5AoAACAlVwAAACm5AgAASMkVAABASq4AAABScgUAAJD6GKl67x2p22hkCOec7y/a6wFLX1Qcae+a9rb2nk3eu1i98zayQ0YmpNjaSNFeTtYnIxfX5vfp5h2y+SVu3jbwvQIAAEjJFQAAQEquAAAAUnIFAACQkisAAICUXAEAAKTkCgAAICVXAAAAKbkCAABIyRUAAEBKrgAAAFJyBQAAkProbe6c09vgf9299/tbK65Cb996l763b716p3fzKvQW3bymD7B5FTa/F3ov1V4PuMl7PWCxit4z0hEPuC03v099rwAAAFJyBQAAkJIrAACAlFwBAACk5AoAACAlVwAAACm5AgAASMkVAABASq4AAABScgUAAJCSKwAAgJRcAQAApD5Gqv7xxx8/f/4cKd3i169ff//993Qv/tG9t/LYOaextd6ivX0rtjait28jE1IsutnIfuudt819K+otuvnUF21ehd6bvGjzxbX5DnnAvPXa/M7a3LeimVzx8+fPv/76a6R0iz///HNzrgAAgG/mf1AAAEBKrgAAAFJyBQAAkJIrAACAlFwBAACk5AoAACAlVwAAACm5AgAASMkVAABASq4AAABScgUAAJD6mO7AvznnfH/Re+9/vejIvPUaWYWiB+yQogdspBG9i1VsrbhYI30r6t1vm4/M5pP1ntdu75HZfLJ6jczbA05Wr5ELv8j3CgAAICVXAAAAKbkCAABIyRUAAEBKrgAAAFJyBQAAkJIrAACAlFwBAACk5AoAACAlVwAAACm5AgAASMkVAABA6mO6A/z48ePHOafy2L33d/fk/xvp23smpPjY5gkpGtkhxcd6ixb1TkjvRtps80hHjvPmbdl7Th8wvUWbb/IRm1+UI2+ZzTvE9woAACAlVwAAACm5AgAASMkVAABASq4AAABScgUAAJCSKwAAgJRcAQAApOQKAAAgJVcAAAApuQIAAEjJFQAAQOpjugP0u/dOd+EfjfStWPScs7a1zUMo6u1bUW9rm3dI0QMmpNfmCeGTkR1SNLKRih7w+tj8otx84Y8U9b0CAABIyRUAAEBKrgAAAFJyBQAAkJIrAACAlFwBAACk5AoAACAlVwAAACm5AgAASMkVAABASq4AAABScgUAAJD6mO7Av7n3Tnfhm2we6TmnsbXiSItFe1srGmmtd4dsLlo0spE2797Nd8iIkcvhAUV7+9brPSMt2nyHjNxIm9f0AS/xIt8rAACAlFwBAACk5AoAACAlVwAAACm5AgAASMkVAABASq4AAABScgUAAJCSKwAAgJRcAQAApOQKAAAg9TFS9devX3/++edI6Ra/fv2a7gIAACxy7r2dzZ3T2NoDFKe3d95617Ro8xCKfds8byN96/WAHdKr93J4wO4d2SEPeGeNbKQHbMuiB+zeBwyh1+bpfcAB9D8oAAAgJVcAAAApuQIAAEjJFQAAQEquAAAAUnIFAACQkisAAICUXAEAAKTkCgAAICVXAAAAKbkCAABIyRUAAEDq3Hun+wAAAPy3+V4BAACk5AoAACAlVwAAACm5AgAASMkVAABASq4AAABScgUAAJCSKwAAgJRcAQAApOQKAAAgJVcAAAApuQIAAEjJFQAAQEquAAAAUnIFAACQkisAAICUXAEAAKTkCgAAICVXAAAAKbkCAABIyRUAAEBKrgAAAFJyBQAAkJIrAACAlFwBAACk/heBbHBiwR9hQgAAAABJRU5ErkJggg==";
+const TEACHERS={
+BENGALI:[
+{name:"BHARATI DEY",dob:"12.07.1973",qual:"B.A.(GEO)",doj:["19.10.2004"],bank:"SBI<br>TALDANGRA",acc:"32171567657",ifsc:"SBIN0012397"},
+{name:"RINKU BHUIN",dob:"01.03.1980",qual:"B.A.(Beng)",doj:["19.10.2004"],bank:"SBI<br>TALDANGRA",acc:"32171603530",ifsc:"SBIN0012397"},
+{name:"BISWARUP DEY",dob:"12.04.1987",qual:"B.A.(Eng)",doj:["17.12.2008"],bank:"SBI<br>TALDANGRA",acc:"32169323535",ifsc:"SBIN0012397"},
+{name:"DOLI MONDAL",dob:"17.01.1975",qual:"B.Sc.(Pure Sc.)",doj:["1st: 03.01.2007","2nd: 02.02.2010"],bank:"SBI<br>TALDANGRA",acc:"32171877251",ifsc:"SBIN0012397"}
+],
+SANTALI:[
+{name:"GANESH MANDI",dob:"04.01.1993",qual:"B.A.(Hons)",doj:["02.03.2015"],bank:"UBI<br>SIMLAPAL",acc:"0448010233552",ifsc:"PUNB0044820"},
+{name:"BIKASH BASKEY",dob:"18.10.1980",qual:"B.A.(Pass)",doj:["01.03.2016"],bank:"SBI<br>TALDANGRA",acc:"35720612096",ifsc:"SBIN0012397"},
+{name:"LAKSHMI SAREN",dob:"25.02.1989",qual:"B.A.(Pass)",doj:["01.03.2016"],bank:"SBI<br>TALDANGRA",acc:"35702689775",ifsc:"SBIN0012397"}
+]};
+const MONTHS=["January","February","March","April","May","June","July","August","September","October","November","December"];
+const pad=n=>String(n).padStart(2,'0'), dmy=d=>pad(d.getDate())+'.'+pad(d.getMonth()+1)+'.'+d.getFullYear(), inr=n=>Number(n).toLocaleString('en-IN');
+function cycleFor(y,m){const start=new Date(y,m-1,11),end=new Date(y,m,10);let cy=end.getFullYear();if(end<new Date(cy,0,11))cy--;return {start,end,cumFrom:new Date(cy,0,11),monthLabel:MONTHS[m]+'-'+y,year:end.getFullYear()}}
+function frame(inner,id,titleMedium){return `<section class="sheet" id="${id}"><div class="b1"></div><div class="b2"></div><div class="b3"></div><div class="corner c-tl"></div><div class="corner c-tr"></div><div class="corner c-bl"></div><div class="corner c-br"></div><div class="mid m-t"></div><div class="mid m-b"></div><div class="mid m-l"></div><div class="mid m-r"></div><div class="cornerInfo">${titleMedium} MEDIUM<br>${SCHOOL.place}, BANKURA</div><div class="content">${inner}</div></section>`}
+function head(title,medium){return `<div class="school">${SCHOOL.name}</div><div class="addr">${SCHOOL.addr}</div><div class="codes">${SCHOOL.codes}</div><div class="rule"></div><div class="titlerow"><div></div><div class="pill">${title}</div><div class="medium">${medium} MEDIUM</div></div>`}
+function footer(cy){return `<div class="foot"><div class="sig"><div class="area">Date : ____ / ____ / ${cy.year}<br>Place : ${SCHOOL.place}</div><div class="line"></div><div class="lab">Signature of Administrator / Secretary / President</div></div><div class="qrbox"><div class="qr"><img src="${QR}" alt="Exact QR Code"></div><div class="qrcap">Scan: Headmaster contact</div></div><div class="sig"><div class="area"></div><div class="line"></div><div class="lab">Signature of Headmaster<span class="nm">${SCHOOL.hm}</span><i>(with school seal)</i></div></div></div>`}
+function monthlyReturn(medium,list,cy,id,dayId){const s=dmy(cy.start),e=dmy(cy.end),f=dmy(cy.cumFrom);const rows=list.map((t,i)=>`<tr><td class="c">${i+1}</td><td class="nm"><b>${t.name}</b><span>${t.dob}</span></td><td class="q"><b>${t.qual}</b>${t.doj.map(d=>`<span>${d}</span>`).join('')}</td><td class="c"><input class="dayInput" data-day="${dayId}" type="number" min="0" value="0"></td><td class="c"><input class="dayInput" data-day="${dayId}" type="number" min="0" value="0"></td><td class="c"><input class="leaveInput" type="number" min="0" value="0"></td><td class="c"><input class="leaveInput" type="number" min="0" value="0"></td><td class="c"><input class="leaveInput" type="number" min="0" value="0"></td><td class="c"><input class="leaveInput" type="number" min="0" value="0"></td><td><input class="remarkInput" type="text"></td><td></td></tr>`).join('');const widths=[9,38,34,16,16,16,16,25,25,20,29];return frame(`${head('MONTHLY RETURN',medium)}<div class="sub">Report of the Para Teacher for the Period From <b>${s}</b> To <b>${e}</b></div><table class="t mr"><colgroup>${widths.map(w=>`<col style="width:${w}mm">`).join('')}</colgroup><thead><tr><th>Sl.<br>No.</th><th>Name of the<br>Para Teacher<br>with Date of Birth</th><th>Qualification &amp;<br>Date of Joining</th><th>Working<br>Days<br>in this<br>Month</th><th>Closing<br>Days<br>in this<br>Month</th><th>C.L.<br>Enjoyed<br>in this<br>Month</th><th>Other<br>Leave<br>in this<br>Month</th><th>Total C.L.<br>Enjoyed from<br>${f}<br>to ${e}</th><th>Total Other<br>Leave Enjoyed<br>from ${f}<br>to ${e}</th><th>Remarks</th><th>Signature of<br>Para Teacher</th></tr></thead><tbody>${rows}</tbody></table>${footer(cy)}<div class="pageTag">PAGE ${id.replace('p','')} OF 4</div>`,id,medium)}
+function salaryStatement(medium,list,cy,id){const n=list.length;const rows=list.map((t,i)=>`<tr><td class="c">${i+1}</td><td class="nm"><b>${t.name}</b></td><td class="c">${t.bank}</td><td class="c mono">${t.acc}</td><td class="c mono">${t.ifsc}</td><td class="c"><input class="dayInput" type="number" min="0" value="0"></td><td class="c">${inr(15523)}</td><td class="c">130</td><td class="c">1,800</td><td class="c net">13,593</td></tr>`).join('');const widths=[9,40,28,36,28,18,25,16,29,25];return frame(`${head('SALARY STATEMENT &nbsp;(FORMAT - CPF)',medium)}<div class="sub">Salary Statement of Para Teacher (Upper Primary) for the Month of <b>${cy.monthLabel}</b><span class="sep">◆</span>Name of Circle : <b>${SCHOOL.circle}</b></div><table class="t cpf"><colgroup>${widths.map(w=>`<col style="width:${w}mm">`).join('')}</colgroup><thead><tr><th>Sl.<br>No.</th><th>Name of<br>Employee</th><th>Bank &amp;<br>Branch Name</th><th>Account No</th><th>IFS Code</th><th>Nos of Days<br>Leave Without<br>Pay</th><th>Gross Consolidated<br>Salary for the Month<br>of ${cy.monthLabel}</th><th>P.TAX</th><th>EPF Deducted 12% of<br>Gross Salary but Not<br>More Than Rs.1800</th><th>Net Salary for the<br>Month of<br>${cy.monthLabel}</th></tr></thead><tbody>${rows}</tbody><tfoot><tr><td></td><td colspan="4" class="c">TOTAL</td><td></td><td class="c">${inr(15523*n)}</td><td class="c">${inr(130*n)}</td><td class="c">${inr(1800*n)}</td><td class="c">${inr(13593*n)}</td></tr></tfoot></table>${footer(cy)}<div class="pageTag">PAGE ${id.replace('p','')} OF 4</div>`,id,medium)}
+function render(){const v=document.getElementById('endMonth').value;if(!v)return;const [y,m]=v.split('-').map(Number);const cy=cycleFor(y,m-1);document.getElementById('cycLabel').textContent='Period: '+dmy(cy.start)+' to '+dmy(cy.end)+' | Salary: '+cy.monthLabel;document.getElementById('pages').innerHTML=monthlyReturn('BENGALI',TEACHERS.BENGALI,cy,'p1','bDays')+monthlyReturn('SANTALI',TEACHERS.SANTALI,cy,'p2','sDays')+salaryStatement('BENGALI',TEACHERS.BENGALI,cy,'p3')+salaryStatement('SANTALI',TEACHERS.SANTALI,cy,'p4');syncDayInputs();fit()}
+function syncDayInputs(){document.querySelectorAll('[data-day="bDays"]').forEach(x=>x.value=document.getElementById('bDays').value||0);document.querySelectorAll('[data-day="sDays"]').forEach(x=>x.value=document.getElementById('sDays').value||0);document.querySelectorAll('.dayInput[data-day]').forEach(x=>x.addEventListener('input',e=>{const id=e.target.dataset.day;document.getElementById(id).value=e.target.value;document.querySelectorAll('[data-day="'+id+'"]').forEach(y=>y.value=e.target.value)}))}
+function fit(){const el=document.getElementById('pages');const need=297/25.4*96+32;el.style.zoom=Math.min(1,window.innerWidth/need)}
+(function init(){const now=new Date();let y=now.getFullYear(),m=now.getMonth();if(now.getDate()>10){m++;if(m>11){m=0;y++}}document.getElementById('endMonth').value=y+'-'+pad(m+1);document.getElementById('endMonth').addEventListener('change',render);document.getElementById('bDays').addEventListener('input',render);document.getElementById('sDays').addEventListener('input',render);window.addEventListener('resize',fit);render()})();
 </script>
 </body>
 </html>
